@@ -40,11 +40,11 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
               <span>{university.city}, {university.state}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="secondary">
+              <Badge variant="default">
                 {university.type === 'public' ? 'Public' : 'Private'}
               </Badge>
               {university.size && (
-                <Badge variant="secondary" className="capitalize">
+                <Badge variant="default" className="capitalize">
                   {university.size}
                 </Badge>
               )}

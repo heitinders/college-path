@@ -134,7 +134,7 @@ export default function ProfilePage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <h4 className="font-medium">{course.name}</h4>
-                          <Badge variant="secondary" className="capitalize">
+                          <Badge variant="default" className="capitalize">
                             {course.level === 'ap' ? 'AP' :
                              course.level === 'ib' ? 'IB' :
                              course.level}
@@ -252,7 +252,7 @@ export default function ProfilePage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <h4 className="font-semibold">{activity.orgName}</h4>
-                          <Badge variant="secondary">{activity.category}</Badge>
+                          <Badge variant="default">{activity.category}</Badge>
                           {activity.leadershipRole && (
                             <Badge variant="outline">{activity.leadershipRole}</Badge>
                           )}
