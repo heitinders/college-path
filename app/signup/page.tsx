@@ -4,6 +4,9 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function SignupPage() {
   const router = useRouter()
@@ -83,59 +86,61 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+      <div className="w-full max-w-lg">
         {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-semibold text-gradient mb-3">
             CollegePath
           </h1>
-          <p className="text-gray-600">Create your account</p>
+          <p className="text-muted-foreground text-lg">Create your account</p>
         </div>
 
         {/* Signup Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <Card>
+          <CardHeader>
+            <CardTitle>Get started</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-destructive/10 border border-destructive/20 text-destructive px-5 py-4 rounded-xl text-sm">
                 {error}
               </div>
             )}
 
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-medium text-foreground">
                 Full Name
               </label>
-              <input
+              <Input
                 id="name"
                 name="name"
                 type="text"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 placeholder="John Doe"
               />
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-foreground">
                 Email
               </label>
-              <input
+              <Input
                 id="email"
-                name="email"
+                name="name"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 placeholder="you@example.com"
               />
             </div>
 
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label htmlFor="role" className="block text-sm font-medium text-foreground">
                 I am a
               </label>
               <select
@@ -143,7 +148,7 @@ export default function SignupPage() {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                className="flex h-12 w-full rounded-xl border border-border bg-card px-5 py-3 text-sm ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:border-ring shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] focus-visible:shadow-luxury-sm"
               >
                 <option value="STUDENT">Student</option>
                 <option value="PARENT">Parent</option>
@@ -151,62 +156,61 @@ export default function SignupPage() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label htmlFor="password" className="block text-sm font-medium text-foreground">
                 Password
               </label>
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 placeholder="••••••••"
               />
             </div>
 
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
                 Confirm Password
               </label>
-              <input
+              <Input
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 placeholder="••••••••"
               />
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full"
             >
               {isLoading ? "Creating account..." : "Create Account"}
-            </button>
+            </Button>
           </form>
 
           {/* Divider */}
-          <div className="relative my-6">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t border-border"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or</span>
+              <span className="px-3 bg-card text-muted-foreground">Or</span>
             </div>
           </div>
 
           {/* Google Sign Up */}
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
-            className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all"
+            className="w-full gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -227,16 +231,17 @@ export default function SignupPage() {
               />
             </svg>
             Continue with Google
-          </button>
+          </Button>
 
           {/* Login Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
+          <p className="text-center text-sm text-muted-foreground mt-8">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 font-medium hover:underline">
+            <Link href="/login" className="text-primary font-medium hover:underline">
               Sign in
             </Link>
           </p>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

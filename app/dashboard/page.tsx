@@ -19,8 +19,20 @@ import {
 import { calculateProfileCompleteness } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowRight, BookmarkCheck, Calendar, Map, TrendingUp } from "lucide-react";
+import { getCurrentUser } from "@/lib/session";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  // Get the real logged-in user
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Extract first name from full name
+  const firstName = user.name?.split(' ')[0] || user.email?.split('@')[0] || 'there';
+
   const completeness = calculateProfileCompleteness({
     profile: mockProfile,
     courses: mockCourses,
@@ -55,7 +67,7 @@ export default function DashboardPage() {
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Welcome Header */}
       <div className="space-y-1">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Welcome back, {mockStudent.firstName}!</h1>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Welcome back, {firstName}!</h1>
         <p className="text-muted-foreground text-base md:text-lg">
           Class of {mockStudent.gradYear} • Grade {mockStudent.gradeLevel}
         </p>

@@ -18,70 +18,69 @@ export function UniversityCard({
   onSave
 }: UniversityCardProps) {
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="pt-6">
-        <div className="space-y-3">
+    <Card className="hover:shadow-luxury-lg hover:-translate-y-0.5 transition-all">
+      <CardContent>
+        <div className="space-y-5">
           <div>
             <Link href={`/colleges/${university.id}`}>
-              <h3 className="font-semibold text-lg hover:text-primary transition-colors">
+              <h3 className="font-semibold text-xl hover:text-primary transition-colors">
                 {university.name}
               </h3>
             </Link>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-              <MapPin className="h-3 w-3" />
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+              <MapPin className="h-4 w-4" />
               <span>{university.city}, {university.state}</span>
             </div>
           </div>
 
           {benchmarks && (
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
+            <div className="grid grid-cols-2 gap-6 text-sm">
+              <div className="space-y-1">
                 <p className="text-muted-foreground">Acceptance Rate</p>
-                <p className="font-semibold">
+                <p className="font-semibold text-lg text-foreground">
                   {(benchmarks.acceptanceRate * 100).toFixed(0)}%
                 </p>
               </div>
-              <div>
+              <div className="space-y-1">
                 <p className="text-muted-foreground">SAT Mid-50%</p>
-                <p className="font-semibold">
+                <p className="font-semibold text-lg text-foreground">
                   {benchmarks.satMid50.low}-{benchmarks.satMid50.high}
                 </p>
               </div>
             </div>
           )}
 
-          <div className="flex items-center gap-2 text-sm">
-            <span className="inline-flex items-center px-2 py-1 rounded-md bg-secondary text-secondary-foreground">
+          <div className="flex items-center gap-2.5 text-sm">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-muted/40 text-foreground border border-border/40">
               {university.type === 'public' ? 'Public' : 'Private'}
             </span>
             {university.size && (
-              <span className="inline-flex items-center px-2 py-1 rounded-md bg-secondary text-secondary-foreground capitalize">
+              <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-muted/40 text-foreground border border-border/40 capitalize">
                 {university.size}
               </span>
             )}
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex gap-3">
         <Button
           variant={isSaved ? "secondary" : "default"}
-          size="sm"
           onClick={onSave}
-          className="flex-1"
+          className="flex-1 gap-2"
         >
           {isSaved ? (
             <>
-              <Check className="h-4 w-4 mr-1" />
+              <Check className="h-4 w-4" />
               Saved
             </>
           ) : (
             <>
-              <Plus className="h-4 w-4 mr-1" />
+              <Plus className="h-4 w-4" />
               Add to My List
             </>
           )}
         </Button>
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" asChild>
           <Link href={`/colleges/${university.id}`}>
             View Details
           </Link>

@@ -16,32 +16,32 @@ export function DeadlineCard({ deadline, universityName }: DeadlineCardProps) {
 
   return (
     <Card className={cn(
-      "hover:shadow-md transition-shadow",
-      isUrgent && "border-orange-500",
+      "hover:shadow-luxury-lg transition-all",
+      isUrgent && "border-primary/60",
       isPast && "opacity-60"
     )}>
-      <CardContent className="pt-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2 flex-1">
+      <CardContent>
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-3 flex-1">
             <div>
-              <h4 className="font-semibold">{deadline.title}</h4>
+              <h4 className="font-semibold text-lg">{deadline.title}</h4>
               {universityName && (
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-sm text-muted-foreground mt-1.5">
                   {universityName}
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
                 <span>{formatDate(deadline.date)}</span>
               </div>
               {!isPast && (
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
                   <span
                     className={cn(
-                      isUrgent && "text-orange-600 font-semibold"
+                      isUrgent && "text-primary font-semibold"
                     )}
                   >
                     {daysUntil === 0 ? 'Today' : daysUntil === 1 ? 'Tomorrow' : `${daysUntil} days`}
@@ -50,13 +50,7 @@ export function DeadlineCard({ deadline, universityName }: DeadlineCardProps) {
               )}
             </div>
           </div>
-          <div className={cn(
-            "px-2 py-1 rounded-md text-xs font-medium",
-            deadline.type === 'application' && "bg-blue-100 text-blue-800",
-            deadline.type === 'testing' && "bg-purple-100 text-purple-800",
-            deadline.type === 'school_specific' && "bg-green-100 text-green-800",
-            deadline.type === 'milestone' && "bg-gray-100 text-gray-800"
-          )}>
+          <div className="px-3 py-1.5 rounded-lg text-xs font-medium bg-muted/40 text-foreground border border-border/40 capitalize shrink-0">
             {deadline.type.replace('_', ' ')}
           </div>
         </div>

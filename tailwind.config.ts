@@ -43,17 +43,11 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        reach: {
-          DEFAULT: "#f97316",
-          light: "#fed7aa",
-        },
-        target: {
-          DEFAULT: "#22c55e",
-          light: "#bbf7d0",
-        },
-        safety: {
-          DEFAULT: "#3b82f6",
-          light: "#bfdbfe",
+        /* Tier colors - Tonal variations of warm bronze */
+        tier: {
+          reach: "hsl(var(--tier-reach))",
+          target: "hsl(var(--tier-target))",
+          safety: "hsl(var(--tier-safety))",
         },
       },
       borderRadius: {
@@ -77,15 +71,16 @@ const config: Config = {
         ],
       },
       fontSize: {
-        "xs": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.01em" }],
-        "sm": ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.01em" }],
-        "base": ["1rem", { lineHeight: "1.5rem", letterSpacing: "0.01em" }],
-        "lg": ["1.125rem", { lineHeight: "1.75rem", letterSpacing: "0.005em" }],
-        "xl": ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "0.005em" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem", letterSpacing: "0em" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem", letterSpacing: "-0.01em" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "-0.015em" }],
-        "5xl": ["3rem", { lineHeight: "1", letterSpacing: "-0.02em" }],
+        "xs": ["0.75rem", { lineHeight: "1.6", letterSpacing: "0.01em" }],
+        "sm": ["0.875rem", { lineHeight: "1.6", letterSpacing: "0.01em" }],
+        "base": ["1rem", { lineHeight: "1.7", letterSpacing: "0.01em" }],
+        "lg": ["1.125rem", { lineHeight: "1.7", letterSpacing: "0.005em" }],
+        "xl": ["1.25rem", { lineHeight: "1.7", letterSpacing: "0.005em" }],
+        "2xl": ["1.5rem", { lineHeight: "1.5", letterSpacing: "0em" }],
+        "3xl": ["1.875rem", { lineHeight: "1.4", letterSpacing: "-0.01em" }],
+        "4xl": ["2.25rem", { lineHeight: "1.3", letterSpacing: "-0.015em" }],
+        "5xl": ["3rem", { lineHeight: "1.2", letterSpacing: "-0.02em" }],
+        "6xl": ["3.75rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
       },
       spacing: {
         "18": "4.5rem",
@@ -93,15 +88,19 @@ const config: Config = {
         "128": "32rem",
       },
       boxShadow: {
-        "apple-sm": "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02)",
-        "apple": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-        "apple-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03)",
-        "apple-xl": "0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        /* Premium luxury shadows - Extremely subtle */
+        "luxury-sm": "0 1px 2px 0 rgba(0, 0, 0, 0.02)",
+        "luxury": "0 2px 8px rgba(0, 0, 0, 0.04)",
+        "luxury-lg": "0 4px 16px rgba(0, 0, 0, 0.06)",
+        /* Legacy apple shadows for compatibility - mapped to luxury shadows */
+        "apple-sm": "0 1px 2px 0 rgba(0, 0, 0, 0.02)",
+        "apple": "0 2px 8px rgba(0, 0, 0, 0.04)",
+        "apple-lg": "0 4px 16px rgba(0, 0, 0, 0.06)",
       },
       animation: {
-        "fade-in": "fadeIn 0.3s ease-in-out",
-        "slide-up": "slideUp 0.3s ease-out",
-        "slide-down": "slideDown 0.3s ease-out",
+        "fade-in": "fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        "slide-up": "slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        "slide-down": "slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
       },
       keyframes: {
         fadeIn: {

@@ -10,15 +10,15 @@ export function TierBadge({ tier, className }: TierBadgeProps) {
   const config = {
     reach: {
       label: 'Reach',
-      className: 'bg-reach text-white border-reach',
+      className: 'bg-tier-reach/10 text-tier-reach border-tier-reach/20',
     },
     target: {
       label: 'Target',
-      className: 'bg-target text-white border-target',
+      className: 'bg-tier-target/10 text-tier-target border-tier-target/20',
     },
     safety: {
       label: 'Safety',
-      className: 'bg-safety text-white border-safety',
+      className: 'bg-tier-safety/10 text-tier-safety border-tier-safety/20',
     },
   };
 

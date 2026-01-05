@@ -31,7 +31,7 @@ export function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center gap-6">
+      <nav className="hidden md:flex items-center gap-8">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname?.startsWith(item.href);
@@ -40,11 +40,11 @@ export function Navigation() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                "flex items-center gap-2.5 text-sm font-medium transition-all duration-300 hover:text-primary",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-5 w-5" />
               <span>{item.label}</span>
             </Link>
           );
@@ -53,7 +53,7 @@ export function Navigation() {
 
       {/* Mobile Menu Button */}
       <button
-        className="md:hidden p-2"
+        className="md:hidden p-2.5 hover:bg-muted/40 rounded-lg transition-colors"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
@@ -66,8 +66,8 @@ export function Navigation() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b shadow-lg z-50">
-          <nav className="flex flex-col p-4 space-y-2">
+        <div className="md:hidden absolute top-[4.5rem] left-0 right-0 bg-background/95 backdrop-blur-md border-b shadow-luxury-lg z-50">
+          <nav className="flex flex-col p-6 space-y-3">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname?.startsWith(item.href);
@@ -77,10 +77,10 @@ export function Navigation() {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                    "flex items-center gap-4 px-5 py-4 rounded-xl text-sm font-medium transition-all min-h-14",
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-accent"
+                      ? "bg-primary/10 text-primary border border-primary/20"
+                      : "text-muted-foreground hover:bg-muted/40"
                   )}
                 >
                   <Icon className="h-5 w-5" />

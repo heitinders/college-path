@@ -4,80 +4,88 @@
 
 @layer base {
   :root {
-    /* Apple-inspired neutral palette */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Warm Neutral Base - Swiss Luxury Spa Aesthetic */
+    --background: 35 20% 97%;        /* Warm cream white */
+    --foreground: 30 8% 20%;         /* Deep warm charcoal */
 
-    /* Subtle card backgrounds with slight warmth */
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    /* Cards - Slightly off-white with warmth */
+    --card: 35 18% 95%;
+    --card-foreground: 30 8% 20%;
 
-    /* Popovers with slight elevation */
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    /* Popovers */
+    --popover: 35 18% 95%;
+    --popover-foreground: 30 8% 20%;
 
-    /* Apple blue as primary - refined and vibrant */
-    --primary: 211 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary - Subtle Bronze/Gold */
+    --primary: 35 35% 55%;           /* Refined bronze */
+    --primary-foreground: 35 20% 97%;
 
-    /* Soft secondary for subtle accents */
-    --secondary: 240 5.9% 96%;
-    --secondary-foreground: 240 5.9% 10%;
+    /* Secondary - Warm Beige */
+    --secondary: 35 15% 88%;
+    --secondary-foreground: 30 8% 30%;
 
-    /* Muted backgrounds - Apple gray */
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    /* Muted - Warm Gray */
+    --muted: 35 12% 92%;
+    --muted-foreground: 30 6% 50%;
 
-    /* Accent for hover states */
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    /* Accent - Subtle Gold */
+    --accent: 40 45% 65%;
+    --accent-foreground: 30 8% 20%;
 
-    /* Destructive using Apple's red */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    /* Destructive - Muted Terracotta */
+    --destructive: 10 50% 60%;
+    --destructive-foreground: 35 20% 97%;
 
-    /* Refined borders - barely there */
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
+    /* Borders - Warm Taupe */
+    --border: 35 15% 85%;
+    --input: 35 15% 85%;
 
-    /* Focus rings with Apple blue */
-    --ring: 211 100% 50%;
+    /* Ring - Bronze */
+    --ring: 35 35% 55%;
 
-    /* Apple uses larger corner radius */
+    /* Tier Colors - Tonal Variations of Bronze */
+    --tier-reach: 35 25% 65%;       /* Lighter bronze */
+    --tier-target: 35 35% 55%;      /* Base bronze */
+    --tier-safety: 35 45% 45%;      /* Deeper bronze */
+
+    /* Refined corner radius */
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Apple dark mode - true blacks with subtle grays */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Dark mode with warm undertones */
+    --background: 30 8% 12%;
+    --foreground: 35 20% 95%;
 
-    --card: 240 10% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 30 8% 16%;
+    --card-foreground: 35 20% 95%;
 
-    --popover: 240 10% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 30 8% 16%;
+    --popover-foreground: 35 20% 95%;
 
-    /* Brighter primary for dark mode */
-    --primary: 211 100% 60%;
-    --primary-foreground: 240 10% 3.9%;
+    --primary: 35 40% 65%;
+    --primary-foreground: 30 8% 12%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 30 8% 20%;
+    --secondary-foreground: 35 20% 95%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 30 8% 20%;
+    --muted-foreground: 35 10% 60%;
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 40 45% 70%;
+    --accent-foreground: 30 8% 12%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 10 50% 65%;
+    --destructive-foreground: 35 20% 95%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --border: 30 8% 24%;
+    --input: 30 8% 24%;
 
-    --ring: 211 100% 60%;
+    --ring: 35 40% 65%;
+
+    --tier-reach: 35 30% 70%;
+    --tier-target: 35 40% 65%;
+    --tier-safety: 35 50% 55%;
   }
 }
 
@@ -88,66 +96,87 @@
 
   body {
     @apply bg-background text-foreground;
-    /* Apple uses -apple-system font stack for native feel */
+    /* Refined typography with optimal readability */
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: 'kern' 1;
     text-rendering: optimizeLegibility;
+    line-height: 1.7;
   }
 
-  /* Apple-like smooth scrolling */
+  /* Typography refinements - Swiss luxury aesthetic */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;  /* Semibold maximum, never bold */
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  p {
+    line-height: 1.7;
+  }
+
+  /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
   }
 
-  /* Enhanced focus states - Apple style */
+  /* Refined focus states */
   *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    @apply outline-none ring-1 ring-ring ring-offset-1 ring-offset-background;
   }
 }
 
 @layer utilities {
-  /* Glassmorphism effect - Apple style */
+  /* Glassmorphism with warm tones */
   .glass {
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(250, 248, 246, 0.72);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
 
   .glass-dark {
-    background: rgba(30, 30, 30, 0.72);
+    background: rgba(40, 36, 32, 0.72);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
 
-  /* Apple-like subtle animations */
+  /* Refined animations */
   .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Text gradient effect */
+  /* Warm gradient for accents */
   .text-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, hsl(35, 35%, 55%) 0%, hsl(40, 45%, 65%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Subtle elevation shadows - Apple style */
+  /* Premium subtle shadows - Extremely refined */
+  .shadow-luxury-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  }
+
+  .shadow-luxury {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-luxury-lg {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Legacy shadow classes for compatibility - map to new shadows */
   .shadow-apple-sm {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   }
 
   .shadow-apple {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
 
   .shadow-apple-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
-  }
-
-  .shadow-apple-xl {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   }
 }

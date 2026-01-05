@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Navigation } from "./navigation"
 import { GraduationCap } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
+import { Button } from "./ui/button"
 
 export function Header() {
   const { data: session, status } = useSession()
@@ -11,46 +12,48 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 glass supports-[backdrop-filter]:bg-background/72">
-      <div className="container flex h-[4.5rem] items-center justify-between">
+      <div className="container flex h-[4.5rem] items-center justify-between px-6 md:px-12">
         <div className="flex items-center gap-2">
-          <Link href={session ? "/dashboard" : "/"} className="flex items-center gap-2.5 transition-transform hover:scale-105 duration-200">
-            <GraduationCap className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold tracking-tight">CollegePath</span>
+          <Link href={session ? "/dashboard" : "/"} className="flex items-center gap-3 transition-opacity hover:opacity-80 duration-300">
+            <GraduationCap className="h-8 w-8 text-primary" />
+            <span className="text-xl font-semibold tracking-tight">CollegePath</span>
           </Link>
         </div>
 
         {session && <Navigation />}
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-6">
           {isLoading ? (
-            <div className="h-10 w-32 bg-gray-200 animate-pulse rounded-lg"></div>
+            <div className="h-12 w-32 bg-muted animate-pulse rounded-lg"></div>
           ) : session ? (
             <>
               <div className="text-sm">
-                <p className="font-semibold">{session.user?.name || session.user?.email}</p>
-                <p className="text-muted-foreground text-xs capitalize">{session.user?.role?.toLowerCase()}</p>
+                <p className="font-semibold text-foreground">{session.user?.name || session.user?.email}</p>
+                <p className="text-muted-foreground capitalize">{session.user?.role?.toLowerCase()}</p>
               </div>
-              <button
+              <Button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                variant="ghost"
+                size="sm"
               >
                 Sign Out
-              </button>
+              </Button>
             </>
           ) : (
-            <div className="flex gap-2">
-              <Link
-                href="/login"
-                className="px-4 py-2 text-sm hover:bg-gray-100 rounded-lg transition-colors"
+            <div className="flex gap-3">
+              <Button
+                asChild
+                variant="ghost"
               >
-                Sign In
-              </Link>
-              <Link
-                href="/signup"
-                className="px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors"
-              >
-                Get Started
-              </Link>
+                <Link href="/login">
+                  Sign In
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link href="/signup">
+                  Get Started
+                </Link>
+              </Button>
             </div>
           )}
         </div>
