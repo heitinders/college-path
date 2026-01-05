@@ -3,6 +3,8 @@ import { requireAuth } from "@/lib/session"
 import { capitalizeFirst } from "@/lib/utils"
 import prisma from "@/lib/prisma"
 
+export const dynamic = "force-dynamic";
+
 // GET /api/profile - Get current user's profile
 export async function GET() {
   try {
