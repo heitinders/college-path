@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MatchRationalePanel } from "@/components/match-rationale-panel";
 import {
-  mockUniversities,
-  mockBenchmarks,
   mockMatchResults,
   mockSavedColleges,
   mockRequirements,
@@ -13,15 +11,101 @@ import {
 import { MapPin, ExternalLink, Plus, Check, Calendar } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { University } from "@/types";
 
-export default function SchoolDetailPage({ params }: { params: { id: string } }) {
-  const university = mockUniversities.find(u => u.id === params.id);
+export const dynamic = "force-dynamic";
+
+const COLLEGE_SCORECARD_API = "https://api.data.gov/ed/collegescorecard/v1/schools";
+
+const toSchoolType = (ownership?: number): University["type"] =>
+  ownership === 1 ? "public" : "private";
+
+const toCampusSize = (size?: number): University["size"] | undefined => {
+  if (!size) return undefined;
+  if (size < 5000) return "small";
+  if (size < 15000) return "medium";
+  return "large";
+};
+
+const sanitizeUrl = (url?: string): string => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return `https://${url}`;
+};
+
+const getSatMidpoint = (school: Record<string, any>): number | null => {
+  const reading = school["latest.admissions.sat_scores.midpoint.critical_reading"];
+  const math = school["latest.admissions.sat_scores.midpoint.math"];
+  const writing = school["latest.admissions.sat_scores.midpoint.writing"];
+  const parts = [reading, math, writing].filter((value) => typeof value === "number");
+  if (parts.length === 0) return null;
+  return parts.reduce((sum, value) => sum + value, 0);
+};
+
+export default async function SchoolDetailPage({ params }: { params: { id: string } }) {
+  const apiKey = process.env.COLLEGE_SCORECARD_API_KEY;
+  if (!apiKey) {
+    notFound();
+  }
+
+  const url = new URL(COLLEGE_SCORECARD_API);
+  url.searchParams.set("api_key", apiKey as string);
+  url.searchParams.set(
+    "fields",
+    [
+      "id",
+      "school.name",
+      "school.city",
+      "school.state",
+      "school.ownership",
+      "school.school_url",
+      "latest.student.size",
+      "latest.admissions.admission_rate.overall",
+      "latest.admissions.act_scores.midpoint.cumulative",
+      "latest.admissions.sat_scores.midpoint.critical_reading",
+      "latest.admissions.sat_scores.midpoint.math",
+      "latest.admissions.sat_scores.midpoint.writing",
+    ].join(",")
+  );
+  url.searchParams.set("id", params.id);
+
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  let university: University | null = null;
+  let admissionsStats: {
+    admissionRate?: number;
+    satMidpoint?: number | null;
+    actMidpoint?: number;
+  } | null = null;
+  if (response.ok) {
+    const payload = await response.json();
+    const school = payload?.results?.[0];
+    if (school) {
+      university = {
+        id: String(school.id),
+        name: school["school.name"] ?? "Unknown",
+        city: school["school.city"] ?? "",
+        state: school["school.state"] ?? "",
+        type: toSchoolType(school["school.ownership"]),
+        website: sanitizeUrl(school["school.school_url"]),
+        size: toCampusSize(school["latest.student.size"]),
+      };
+      const admissionRate = school["latest.admissions.admission_rate.overall"];
+      const satMidpoint = getSatMidpoint(school);
+      const actMidpoint = school["latest.admissions.act_scores.midpoint.cumulative"];
+      admissionsStats = {
+        admissionRate,
+        satMidpoint,
+        actMidpoint,
+      };
+    }
+  }
 
   if (!university) {
     notFound();
   }
 
-  const benchmarks = mockBenchmarks[university.id];
   const match = mockMatchResults[university.id];
   const isSaved = mockSavedColleges.some(sc => sc.universityId === university.id);
   const requirements = mockRequirements[university.id];
@@ -80,47 +164,40 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
         {/* Left Column - Details */}
         <div className="lg:col-span-2 space-y-8">
           {/* Admissions Benchmarks */}
-          {benchmarks && (
+          {(typeof admissionsStats?.admissionRate === "number" ||
+            typeof admissionsStats?.satMidpoint === "number" ||
+            typeof admissionsStats?.actMidpoint === "number") && (
             <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle>Admissions Profile</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Acceptance Rate</p>
-                    <p className="text-2xl font-bold">
-                      {(benchmarks.acceptanceRate * 100).toFixed(0)}%
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">GPA Range</p>
-                    <p className="text-2xl font-bold">
-                      {benchmarks.gpaRange.min.toFixed(1)}-{benchmarks.gpaRange.max.toFixed(1)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">SAT Mid-50%</p>
-                    <p className="text-2xl font-bold">
-                      {benchmarks.satMid50.low}-{benchmarks.satMid50.high}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">ACT Mid-50%</p>
-                    <p className="text-2xl font-bold">
-                      {benchmarks.actMid50.low}-{benchmarks.actMid50.high}
-                    </p>
-                  </div>
+                  {typeof admissionsStats?.admissionRate === "number" && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Acceptance Rate</p>
+                      <p className="text-2xl font-bold">
+                        {(admissionsStats.admissionRate * 100).toFixed(0)}%
+                      </p>
+                    </div>
+                  )}
+                  {typeof admissionsStats?.satMidpoint === "number" && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">SAT Midpoint</p>
+                      <p className="text-2xl font-bold">
+                        {admissionsStats.satMidpoint}
+                      </p>
+                    </div>
+                  )}
+                  {typeof admissionsStats?.actMidpoint === "number" && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">ACT Midpoint</p>
+                      <p className="text-2xl font-bold">
+                        {admissionsStats.actMidpoint}
+                      </p>
+                    </div>
+                  )}
                 </div>
-
-                {benchmarks.testPolicy && (
-                  <div className="mt-4 pt-4 border-t">
-                    <p className="text-sm text-muted-foreground mb-1">Test Policy</p>
-                    <Badge variant="outline" className="capitalize">
-                      {benchmarks.testPolicy}
-                    </Badge>
-                  </div>
-                )}
               </CardContent>
             </Card>
           )}

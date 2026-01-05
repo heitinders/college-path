@@ -33,6 +33,34 @@ const mockedNotFound = notFound as jest.Mock;
 describe("pages render", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (global as any).fetch = jest.fn((input: RequestInfo) => {
+      const url = typeof input === "string" ? input : input.url;
+      if (url.includes("/api/colleges")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            data: [],
+            pagination: { page: 1, limit: 50, total: 0, totalPages: 0 },
+          }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          results: [
+            {
+              id: 1,
+              "school.name": "Test University",
+              "school.city": "Test City",
+              "school.state": "CA",
+              "school.ownership": 1,
+              "school.school_url": "test.edu",
+              "latest.student.size": 12000,
+            },
+          ],
+        }),
+      });
+    });
   });
 
   it("renders home page hero", async () => {
@@ -63,9 +91,9 @@ describe("pages render", () => {
 
   it("renders college detail page", async () => {
     const CollegeDetailPage = (await import("@/app/colleges/[id]/page")).default;
-    render(CollegeDetailPage({ params: { id: "u1" } }) as ReactElement);
+    render((await CollegeDetailPage({ params: { id: "1" } })) as ReactElement);
     expect(mockedNotFound).not.toHaveBeenCalled();
-    expect(screen.getByText(/Admissions Profile/i)).toBeInTheDocument();
+    expect(screen.getByText(/Test University/i)).toBeInTheDocument();
   });
 
   it("renders deadlines page", async () => {

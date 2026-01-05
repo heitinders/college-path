@@ -147,7 +147,7 @@ export const mockPreferences: Preferences = {
 // Mock Universities
 export const mockUniversities: University[] = [
   {
-    id: 'u1',
+    id: '110635',
     name: 'University of California, Berkeley',
     city: 'Berkeley',
     state: 'CA',
@@ -157,7 +157,7 @@ export const mockUniversities: University[] = [
     region: 'West Coast',
   },
   {
-    id: 'u2',
+    id: '164988',
     name: 'Boston University',
     city: 'Boston',
     state: 'MA',
@@ -167,7 +167,7 @@ export const mockUniversities: University[] = [
     region: 'Northeast',
   },
   {
-    id: 'u3',
+    id: '236948',
     name: 'University of Washington',
     city: 'Seattle',
     state: 'WA',
@@ -177,7 +177,7 @@ export const mockUniversities: University[] = [
     region: 'West Coast',
   },
   {
-    id: 'u4',
+    id: '167358',
     name: 'Northeastern University',
     city: 'Boston',
     state: 'MA',
@@ -187,7 +187,7 @@ export const mockUniversities: University[] = [
     region: 'Northeast',
   },
   {
-    id: 'u5',
+    id: '145637',
     name: 'University of Illinois Urbana-Champaign',
     city: 'Champaign',
     state: 'IL',
@@ -197,7 +197,7 @@ export const mockUniversities: University[] = [
     region: 'Midwest',
   },
   {
-    id: 'u6',
+    id: '243780',
     name: 'Purdue University',
     city: 'West Lafayette',
     state: 'IN',
@@ -207,7 +207,7 @@ export const mockUniversities: University[] = [
     region: 'Midwest',
   },
   {
-    id: 'u7',
+    id: '122931',
     name: 'Santa Clara University',
     city: 'Santa Clara',
     state: 'CA',
@@ -217,7 +217,7 @@ export const mockUniversities: University[] = [
     region: 'West Coast',
   },
   {
-    id: 'u8',
+    id: '195003',
     name: 'Rochester Institute of Technology',
     city: 'Rochester',
     state: 'NY',
@@ -230,8 +230,8 @@ export const mockUniversities: University[] = [
 
 // Mock Benchmarks
 export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
-  u1: {
-    universityId: 'u1',
+  110635: {
+    universityId: '110635',
     cycleYear: 2025,
     gpaRange: { min: 3.9, max: 4.0 },
     satMid50: { low: 1330, high: 1530 },
@@ -239,8 +239,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.11,
     testPolicy: 'required',
   },
-  u2: {
-    universityId: 'u2',
+  164988: {
+    universityId: '164988',
     cycleYear: 2025,
     gpaRange: { min: 3.7, max: 4.0 },
     satMid50: { low: 1310, high: 1500 },
@@ -248,8 +248,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.18,
     testPolicy: 'optional',
   },
-  u3: {
-    universityId: 'u3',
+  236948: {
+    universityId: '236948',
     cycleYear: 2025,
     gpaRange: { min: 3.7, max: 4.0 },
     satMid50: { low: 1300, high: 1500 },
@@ -257,8 +257,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.48,
     testPolicy: 'optional',
   },
-  u4: {
-    universityId: 'u4',
+  167358: {
+    universityId: '167358',
     cycleYear: 2025,
     gpaRange: { min: 3.8, max: 4.0 },
     satMid50: { low: 1390, high: 1540 },
@@ -266,8 +266,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.07,
     testPolicy: 'optional',
   },
-  u5: {
-    universityId: 'u5',
+  145637: {
+    universityId: '145637',
     cycleYear: 2025,
     gpaRange: { min: 3.6, max: 4.0 },
     satMid50: { low: 1340, high: 1520 },
@@ -275,8 +275,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.45,
     testPolicy: 'optional',
   },
-  u6: {
-    universityId: 'u6',
+  243780: {
+    universityId: '243780',
     cycleYear: 2025,
     gpaRange: { min: 3.5, max: 3.9 },
     satMid50: { low: 1200, high: 1470 },
@@ -284,8 +284,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.53,
     testPolicy: 'optional',
   },
-  u7: {
-    universityId: 'u7',
+  122931: {
+    universityId: '122931',
     cycleYear: 2025,
     gpaRange: { min: 3.5, max: 3.9 },
     satMid50: { low: 1280, high: 1460 },
@@ -293,8 +293,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
     acceptanceRate: 0.52,
     testPolicy: 'optional',
   },
-  u8: {
-    universityId: 'u8',
+  195003: {
+    universityId: '195003',
     cycleYear: 2025,
     gpaRange: { min: 3.6, max: 3.9 },
     satMid50: { low: 1270, high: 1450 },
@@ -306,8 +306,8 @@ export const mockBenchmarks: Record<string, AdmissionsBenchmarks> = {
 
 // Mock Match Results
 export const mockMatchResults: Record<string, MatchResult> = {
-  u1: {
-    universityId: 'u1',
+  110635: {
+    universityId: '110635',
     tier: 'reach',
     confidence: 'low',
     rationale: [
@@ -320,8 +320,8 @@ export const mockMatchResults: Record<string, MatchResult> = {
       { area: 'Academic Rigor', suggestion: 'Continue AP course trajectory in senior year', priority: 2 },
     ],
   },
-  u2: {
-    universityId: 'u2',
+  164988: {
+    universityId: '164988',
     tier: 'target',
     confidence: 'medium',
     rationale: [
@@ -333,8 +333,8 @@ export const mockMatchResults: Record<string, MatchResult> = {
       { area: 'Testing', suggestion: 'A higher SAT score would strengthen your application', priority: 2 },
     ],
   },
-  u3: {
-    universityId: 'u3',
+  236948: {
+    universityId: '236948',
     tier: 'target',
     confidence: 'high',
     rationale: [
@@ -344,8 +344,8 @@ export const mockMatchResults: Record<string, MatchResult> = {
     ],
     gaps: [],
   },
-  u6: {
-    universityId: 'u6',
+  243780: {
+    universityId: '243780',
     tier: 'safety',
     confidence: 'high',
     rationale: [
@@ -362,28 +362,28 @@ export const mockSavedColleges: SavedCollege[] = [
   {
     id: 'sc1',
     studentId: 'student-1',
-    universityId: 'u1',
+    universityId: '110635',
     interestLevel: 'interested',
     savedDate: '2025-11-15',
   },
   {
     id: 'sc2',
     studentId: 'student-1',
-    universityId: 'u2',
+    universityId: '164988',
     interestLevel: 'top_choice',
     savedDate: '2025-11-10',
   },
   {
     id: 'sc3',
     studentId: 'student-1',
-    universityId: 'u3',
+    universityId: '236948',
     interestLevel: 'interested',
     savedDate: '2025-11-20',
   },
   {
     id: 'sc4',
     studentId: 'student-1',
-    universityId: 'u6',
+    universityId: '243780',
     interestLevel: 'exploring',
     savedDate: '2025-12-01',
   },
@@ -391,16 +391,16 @@ export const mockSavedColleges: SavedCollege[] = [
 
 // Mock Application Requirements
 export const mockRequirements: Record<string, ApplicationRequirements> = {
-  u1: {
-    universityId: 'u1',
+  110635: {
+    universityId: '110635',
     essaysRequired: 4,
     recLettersRequired: 2,
     interviewOffered: false,
     interviewRequired: false,
     supplementsRequired: ['Activities list', 'Additional info'],
   },
-  u2: {
-    universityId: 'u2',
+  164988: {
+    universityId: '164988',
     essaysRequired: 2,
     recLettersRequired: 2,
     interviewOffered: true,
@@ -411,14 +411,14 @@ export const mockRequirements: Record<string, ApplicationRequirements> = {
 
 // Mock Deadlines
 export const mockApplicationDeadlines: Record<string, ApplicationDeadline[]> = {
-  u1: [
-    { universityId: 'u1', planType: 'EA', deadline: '2025-11-01' },
-    { universityId: 'u1', planType: 'RD', deadline: '2025-11-30' },
+  110635: [
+    { universityId: '110635', planType: 'EA', deadline: '2025-11-01' },
+    { universityId: '110635', planType: 'RD', deadline: '2025-11-30' },
   ],
-  u2: [
-    { universityId: 'u2', planType: 'ED', deadline: '2025-11-01' },
-    { universityId: 'u2', planType: 'ED2', deadline: '2026-01-01' },
-    { universityId: 'u2', planType: 'RD', deadline: '2026-01-04' },
+  164988: [
+    { universityId: '164988', planType: 'ED', deadline: '2025-11-01' },
+    { universityId: '164988', planType: 'ED2', deadline: '2026-01-01' },
+    { universityId: '164988', planType: 'RD', deadline: '2026-01-04' },
   ],
 };
 
@@ -554,7 +554,7 @@ export const mockDeadlines: Deadline[] = [
     title: 'Boston University - ED2 Deadline',
     date: '2026-01-04',
     type: 'application',
-    universityId: 'u2',
+    universityId: '164988',
   },
   {
     id: 'd2',
@@ -577,6 +577,6 @@ export const mockDeadlines: Deadline[] = [
     title: 'UC Berkeley - RD Deadline',
     date: '2025-11-30',
     type: 'application',
-    universityId: 'u1',
+    universityId: '110635',
   },
 ];

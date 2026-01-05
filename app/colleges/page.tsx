@@ -1,25 +1,141 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { UniversityCard } from "@/components/university-card";
-import { mockUniversities, mockBenchmarks, mockSavedColleges } from "@/lib/mock-data";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { mockBenchmarks, mockSavedColleges } from "@/lib/mock-data";
+import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import type { University } from "@/types";
+import { cn } from "@/lib/utils";
+
+const ALL_STATES = [
+  ["AL", "Alabama"],
+  ["AK", "Alaska"],
+  ["AZ", "Arizona"],
+  ["AR", "Arkansas"],
+  ["CA", "California"],
+  ["CO", "Colorado"],
+  ["CT", "Connecticut"],
+  ["DE", "Delaware"],
+  ["FL", "Florida"],
+  ["GA", "Georgia"],
+  ["HI", "Hawaii"],
+  ["ID", "Idaho"],
+  ["IL", "Illinois"],
+  ["IN", "Indiana"],
+  ["IA", "Iowa"],
+  ["KS", "Kansas"],
+  ["KY", "Kentucky"],
+  ["LA", "Louisiana"],
+  ["ME", "Maine"],
+  ["MD", "Maryland"],
+  ["MA", "Massachusetts"],
+  ["MI", "Michigan"],
+  ["MN", "Minnesota"],
+  ["MS", "Mississippi"],
+  ["MO", "Missouri"],
+  ["MT", "Montana"],
+  ["NE", "Nebraska"],
+  ["NV", "Nevada"],
+  ["NH", "New Hampshire"],
+  ["NJ", "New Jersey"],
+  ["NM", "New Mexico"],
+  ["NY", "New York"],
+  ["NC", "North Carolina"],
+  ["ND", "North Dakota"],
+  ["OH", "Ohio"],
+  ["OK", "Oklahoma"],
+  ["OR", "Oregon"],
+  ["PA", "Pennsylvania"],
+  ["RI", "Rhode Island"],
+  ["SC", "South Carolina"],
+  ["SD", "South Dakota"],
+  ["TN", "Tennessee"],
+  ["TX", "Texas"],
+  ["UT", "Utah"],
+  ["VT", "Vermont"],
+  ["VA", "Virginia"],
+  ["WA", "Washington"],
+  ["WV", "West Virginia"],
+  ["WI", "Wisconsin"],
+  ["WY", "Wyoming"],
+  ["DC", "District of Columbia"],
+] as const;
 
 export default function CollegesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState({
-    state: '',
+    state: ALL_STATES.map(([abbr]) => abbr),
     type: '',
     size: '',
     region: '',
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [isStateOpen, setIsStateOpen] = useState(false);
+  const stateDropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const filteredUniversities = mockUniversities.filter((university) => {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!stateDropdownRef.current) return;
+      if (stateDropdownRef.current.contains(event.target as Node)) return;
+      setIsStateOpen(false);
+    };
+
+    if (isStateOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isStateOpen]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchColleges = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams();
+        if (searchQuery) params.set("search", searchQuery);
+        if (filters.state.length > 0 && filters.state.length < ALL_STATES.length) {
+          params.set("state", filters.state.join(","));
+        }
+        if (filters.type) params.set("type", filters.type);
+        params.set("page", page.toString());
+        params.set("limit", "24");
+
+        const response = await fetch(`/api/colleges?${params.toString()}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          throw new Error("Failed to load colleges");
+        }
+        const payload = await response.json();
+        setUniversities(payload.data || []);
+        setTotalPages(payload.pagination?.totalPages || 1);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          setError("Unable to load colleges right now.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchColleges();
+    return () => controller.abort();
+  }, [searchQuery, filters.state, filters.type, page]);
+
+  const filteredUniversities = universities.filter((university) => {
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -31,7 +147,11 @@ export default function CollegesPage() {
     }
 
     // State filter
-    if (filters.state && university.state !== filters.state) {
+    if (
+      filters.state.length > 0 &&
+      filters.state.length < ALL_STATES.length &&
+      !filters.state.includes(university.state)
+    ) {
       return false;
     }
 
@@ -56,11 +176,19 @@ export default function CollegesPage() {
   const savedCollegeIds = new Set(mockSavedColleges.map(sc => sc.universityId));
 
   const clearFilters = () => {
-    setFilters({ state: '', type: '', size: '', region: '' });
+    setFilters({ state: ALL_STATES.map(([abbr]) => abbr), type: '', size: '', region: '' });
     setSearchQuery('');
+    setPage(1);
   };
 
-  const activeFilterCount = Object.values(filters).filter(Boolean).length;
+  const activeFilterCount = Object.entries(filters).filter(([key, value]) => {
+    if (key === "state") {
+      return Array.isArray(value) && value.length > 0 && value.length < ALL_STATES.length;
+    }
+    return Boolean(value);
+  }).length;
+  const canGoBack = page > 1;
+  const canGoForward = page < totalPages;
 
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
@@ -87,7 +215,10 @@ export default function CollegesPage() {
               <Input
                 placeholder="Search by name, city, or state..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(1);
+                }}
                 className="pl-10"
               />
             </div>
@@ -104,6 +235,15 @@ export default function CollegesPage() {
                 </span>
               )}
             </Button>
+            {page > 1 && (
+              <Button
+                variant="ghost"
+                onClick={() => setPage(1)}
+                className="w-full sm:w-auto"
+              >
+                Reset page
+              </Button>
+            )}
           </div>
 
           {/* Filter Panel */}
@@ -113,25 +253,98 @@ export default function CollegesPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">State</label>
-                  <Select
-                    value={filters.state}
-                    onChange={(e) => setFilters({ ...filters, state: e.target.value })}
-                  >
-                    <option value="">All states</option>
-                    <option value="CA">California</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="WA">Washington</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="NY">New York</option>
-                  </Select>
+                  <div className="relative" ref={stateDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsStateOpen((prev) => !prev)}
+                      className="flex h-11 w-full items-center justify-between rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:border-ring shadow-apple-sm focus-visible:shadow-apple"
+                    >
+                      <span>
+                        {filters.state.length === 0 || filters.state.length === ALL_STATES.length
+                          ? "All states"
+                          : `${filters.state.length} states selected`}
+                      </span>
+                      <ChevronDown className={cn(
+                        "h-4 w-4 text-muted-foreground transition-transform",
+                        isStateOpen && "rotate-180"
+                      )} />
+                    </button>
+                    {isStateOpen && (
+                      <div className="absolute z-20 mt-2 w-full rounded-xl border border-border/60 bg-card p-3 shadow-luxury-lg">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                        <span>Select states</span>
+                        <button
+                          type="button"
+                          className="text-primary hover:underline"
+                          onClick={() => {
+                            setFilters((prev) => ({ ...prev, state: ALL_STATES.map(([abbr]) => abbr) }));
+                            setPage(1);
+                          }}
+                        >
+                          Select all
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                        {ALL_STATES.map(([abbr, name]) => {
+                          const isSelected = filters.state.includes(abbr);
+                          return (
+                            <label
+                              key={abbr}
+                              className={cn(
+                                "flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-all cursor-pointer",
+                                isSelected
+                                  ? "border-primary/40 bg-primary/10 text-primary"
+                                  : "border-border/60 bg-card/80 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                              )}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => {
+                                  setFilters((prev) => ({
+                                    ...prev,
+                                    state: isSelected
+                                      ? prev.state.filter((item) => item !== abbr)
+                                      : [...prev.state, abbr],
+                                  }));
+                                  setPage(1);
+                                }}
+                                className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                              />
+                              <span className="flex-1">{name}</span>
+                              <span className="text-[10px] font-semibold uppercase">{abbr}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                      {filters.state.length > 0 && filters.state.length < ALL_STATES.length && (
+                        <div className="mt-2 flex items-center justify-end">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setFilters((prev) => ({ ...prev, state: ALL_STATES.map(([abbr]) => abbr) }));
+                              setPage(1);
+                            }}
+                          >
+                            Clear
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Type</label>
                   <Select
                     value={filters.type}
-                    onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+                    onChange={(e) => {
+                      setFilters({ ...filters, type: e.target.value });
+                      setPage(1);
+                    }}
                   >
                     <option value="">All types</option>
                     <option value="public">Public</option>
@@ -143,7 +356,10 @@ export default function CollegesPage() {
                   <label className="text-sm font-medium">Size</label>
                   <Select
                     value={filters.size}
-                    onChange={(e) => setFilters({ ...filters, size: e.target.value })}
+                    onChange={(e) => {
+                      setFilters({ ...filters, size: e.target.value });
+                      setPage(1);
+                    }}
                   >
                     <option value="">All sizes</option>
                     <option value="small">Small</option>
@@ -156,7 +372,10 @@ export default function CollegesPage() {
                   <label className="text-sm font-medium">Region</label>
                   <Select
                     value={filters.region}
-                    onChange={(e) => setFilters({ ...filters, region: e.target.value })}
+                    onChange={(e) => {
+                      setFilters({ ...filters, region: e.target.value });
+                      setPage(1);
+                    }}
                   >
                     <option value="">All regions</option>
                     <option value="West Coast">West Coast</option>
@@ -185,7 +404,9 @@ export default function CollegesPage() {
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
           <p className="text-sm text-muted-foreground">
-          Showing {filteredUniversities.length} {filteredUniversities.length === 1 ? 'college' : 'colleges'}
+            {isLoading
+              ? "Loading colleges..."
+              : `Showing ${filteredUniversities.length} ${filteredUniversities.length === 1 ? 'college' : 'colleges'}`}
           </p>
           {activeFilterCount > 0 && (
             <span className="text-xs font-medium rounded-full bg-secondary text-secondary-foreground px-3 py-1">
@@ -194,7 +415,31 @@ export default function CollegesPage() {
           )}
         </div>
 
-        {filteredUniversities.length > 0 ? (
+        {isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} className="bg-card/90 border-border/70 shadow-luxury-sm">
+                <CardContent className="p-6">
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-5 w-3/4 rounded-md bg-muted" />
+                    <div className="h-4 w-1/2 rounded-md bg-muted" />
+                    <div className="h-24 rounded-xl bg-muted" />
+                    <div className="flex gap-2">
+                      <div className="h-8 w-20 rounded-full bg-muted" />
+                      <div className="h-8 w-20 rounded-full bg-muted" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : error ? (
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
+            <CardContent className="py-12 text-center text-muted-foreground">
+              {error}
+            </CardContent>
+          </Card>
+        ) : filteredUniversities.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredUniversities.map((university) => (
               <UniversityCard
@@ -226,6 +471,33 @@ export default function CollegesPage() {
           </Card>
         )}
       </div>
+
+      {/* Pagination */}
+      {!isLoading && !error && totalPages > 1 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card/80 p-4 shadow-luxury-sm">
+          <p className="text-sm text-muted-foreground">
+            Page {page} of {totalPages}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={!canGoBack}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={!canGoForward}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
