@@ -6,5 +6,5 @@ if (!global.TextEncoder) {
 }
 
 if (!global.TextDecoder) {
-  global.TextDecoder = TextDecoder;
+  global.TextDecoder = TextDecoder as unknown as typeof global.TextDecoder;
 }
