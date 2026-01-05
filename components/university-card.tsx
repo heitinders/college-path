@@ -8,6 +8,7 @@ interface UniversityCardProps {
   university: University;
   benchmarks?: AdmissionsBenchmarks;
   isSaved?: boolean;
+  isSaving?: boolean;
   onSave?: () => void;
 }
 
@@ -15,6 +16,7 @@ export function UniversityCard({
   university,
   benchmarks,
   isSaved,
+  isSaving,
   onSave
 }: UniversityCardProps) {
   return (
@@ -68,8 +70,11 @@ export function UniversityCard({
           variant={isSaved ? "secondary" : "default"}
           onClick={onSave}
           className="w-full flex-1 gap-2"
+          disabled={isSaved || isSaving}
         >
-          {isSaved ? (
+          {isSaving ? (
+            <>Saving...</>
+          ) : isSaved ? (
             <>
               <Check className="h-4 w-4" />
               Saved

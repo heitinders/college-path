@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { UniversityCard } from "@/components/university-card";
-import { mockBenchmarks, mockSavedColleges } from "@/lib/mock-data";
+import { mockBenchmarks } from "@/lib/mock-data";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import type { University } from "@/types";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const ALL_STATES = [
   ["AL", "Alabama"],
@@ -72,6 +73,9 @@ export default function CollegesPage() {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [savedCollegeIds, setSavedCollegeIds] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState<string | null>(null);
+  const [onboardingRequired, setOnboardingRequired] = useState(false);
   const [filters, setFilters] = useState({
     state: ALL_STATES.map(([abbr]) => abbr),
     type: '',
@@ -135,6 +139,28 @@ export default function CollegesPage() {
     return () => controller.abort();
   }, [searchQuery, filters.state, filters.type, page]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchSaved = async () => {
+      try {
+        const response = await fetch("/api/saved-colleges", {
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+        const payload = await response.json();
+        const ids = (payload.data || []).map((item: { unitId: string }) => item.unitId);
+        setSavedCollegeIds(ids);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          return;
+        }
+      }
+    };
+
+    fetchSaved();
+    return () => controller.abort();
+  }, []);
+
   const filteredUniversities = universities.filter((university) => {
     // Search filter
     if (searchQuery) {
@@ -173,7 +199,42 @@ export default function CollegesPage() {
     return true;
   });
 
-  const savedCollegeIds = new Set(mockSavedColleges.map(sc => sc.universityId));
+  const savedCollegeIdSet = new Set(savedCollegeIds);
+
+  const handleSaveCollege = async (university: University) => {
+    if (savedCollegeIdSet.has(university.id)) return;
+    setIsSaving(university.id);
+    try {
+      const response = await fetch("/api/saved-colleges", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          unitId: university.id,
+          name: university.name,
+          city: university.city,
+          state: university.state,
+          region: university.region || "Unknown",
+          type: university.type,
+          size: university.size || null,
+          website: university.website,
+        }),
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        if (response.status === 409) {
+          setOnboardingRequired(true);
+        }
+        throw new Error(payload.error || "Failed to save college");
+      }
+      setSavedCollegeIds((prev) =>
+        prev.includes(university.id) ? prev : [...prev, university.id]
+      );
+    } catch (err) {
+      setError((err as Error).message || "Unable to save college right now.");
+    } finally {
+      setIsSaving(null);
+    }
+  };
 
   const clearFilters = () => {
     setFilters({ state: ALL_STATES.map(([abbr]) => abbr), type: '', size: '', region: '' });
@@ -415,7 +476,25 @@ export default function CollegesPage() {
           )}
         </div>
 
-        {isLoading ? (
+      {onboardingRequired && (
+        <Card className="bg-accent/10 border-accent/30">
+          <CardContent className="py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                Complete onboarding to save colleges
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Finish your student profile to add schools to your list.
+              </p>
+            </div>
+            <Button asChild size="sm">
+              <Link href="/onboarding">Go to Onboarding</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
               <Card key={index} className="bg-card/90 border-border/70 shadow-luxury-sm">
@@ -446,10 +525,10 @@ export default function CollegesPage() {
                 key={university.id}
                 university={university}
                 benchmarks={mockBenchmarks[university.id]}
-                isSaved={savedCollegeIds.has(university.id)}
+                isSaved={savedCollegeIdSet.has(university.id)}
+                isSaving={isSaving === university.id}
                 onSave={() => {
-                  // In a real app, this would call an API
-                  console.log('Save university:', university.id);
+                  handleSaveCollege(university);
                 }}
               />
             ))}

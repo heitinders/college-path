@@ -1,45 +1,95 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { TierBadge } from "@/components/tier-badge";
-import {
-  mockSavedColleges,
-  mockUniversities,
-  mockMatchResults,
-  mockChecklistItems,
-  mockApplicationDeadlines,
-} from "@/lib/mock-data";
+import { mockMatchResults, mockApplicationDeadlines } from "@/lib/mock-data";
 import { MapPin, Calendar, ListChecks, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import type { University, SavedCollegeWithDetails } from "@/types";
 
 export default function MyCollegesPage() {
-  const savedWithDetails = mockSavedColleges.map(saved => {
-    const university = mockUniversities.find(u => u.id === saved.universityId)!;
-    const match = mockMatchResults[saved.universityId];
+  const [saved, setSaved] = useState<
+    Array<{ id: string; unitId: string; universityId: string }>
+  >([]);
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    // Mock checklist progress (in real app, would calculate from actual checklist items)
-    const checklistProgress = {
-      total: 6,
-      completed: saved.universityId === 'u2' ? 2 : 0,
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchSaved = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const savedResponse = await fetch("/api/saved-colleges", {
+          signal: controller.signal,
+        });
+        if (!savedResponse.ok) {
+          throw new Error("Unable to load saved colleges.");
+        }
+        const savedPayload = await savedResponse.json();
+        const savedList = savedPayload.data || [];
+        setSaved(savedList);
+
+        const ids = savedList.map((item: { unitId: string }) => item.unitId);
+        if (ids.length === 0) {
+          setUniversities([]);
+          return;
+        }
+
+        const detailsResponse = await fetch(
+          `/api/colleges/by-ids?ids=${ids.join(",")}`,
+          { signal: controller.signal }
+        );
+        if (!detailsResponse.ok) {
+          throw new Error("Unable to load college details.");
+        }
+        const detailsPayload = await detailsResponse.json();
+        setUniversities(detailsPayload.data || []);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          setError((err as Error).message || "Unable to load saved colleges.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    const deadlines = mockApplicationDeadlines[saved.universityId] || [];
-    const nextDeadline = deadlines.length > 0 ? deadlines[0].deadline : undefined;
+    fetchSaved();
+    return () => controller.abort();
+  }, []);
 
-    return {
-      ...saved,
-      university,
-      match,
-      checklistProgress,
-      nextDeadline,
-    };
-  });
+  const savedWithDetails: SavedCollegeWithDetails[] = useMemo(() => {
+    return saved
+      .map((savedItem) => {
+        const university = universities.find((u) => u.id === savedItem.unitId);
+        if (!university) return null;
+        const match = mockMatchResults[savedItem.unitId];
+        const deadlines = mockApplicationDeadlines[savedItem.unitId] || [];
+        const nextDeadline = deadlines.length > 0 ? deadlines[0].deadline : undefined;
+        return {
+          id: savedItem.id,
+          studentId: "current",
+          universityId: savedItem.unitId,
+          interestLevel: "interested",
+          savedDate: "",
+          university,
+          match,
+          checklistProgress: { total: 6, completed: 0 },
+          nextDeadline,
+        };
+      })
+      .filter(Boolean) as SavedCollegeWithDetails[];
+  }, [saved, universities]);
 
-  // Group by tier
   const byTier = {
     reach: savedWithDetails.filter(s => s.match?.tier === 'reach'),
     target: savedWithDetails.filter(s => s.match?.tier === 'target'),
     safety: savedWithDetails.filter(s => s.match?.tier === 'safety'),
+    other: savedWithDetails.filter(s => !s.match?.tier),
   };
 
   const renderCollegeCard = (college: typeof savedWithDetails[0]) => {
@@ -130,7 +180,19 @@ export default function MyCollegesPage() {
         </div>
       </div>
 
-      {savedWithDetails.length === 0 ? (
+      {isLoading ? (
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
+          <CardContent className="py-12 text-center text-muted-foreground">
+            Loading saved colleges...
+          </CardContent>
+        </Card>
+      ) : error ? (
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
+          <CardContent className="py-12 text-center text-muted-foreground">
+            {error}
+          </CardContent>
+        </Card>
+      ) : savedWithDetails.length === 0 ? (
         <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardContent className="py-12 text-center">
             <div className="max-w-md mx-auto space-y-4">
@@ -189,6 +251,18 @@ export default function MyCollegesPage() {
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {byTier.safety.map(renderCollegeCard)}
+              </div>
+            </div>
+          )}
+
+          {byTier.other.length > 0 && (
+            <div className="space-y-5">
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-2xl font-semibold tracking-tight">Saved Schools</h2>
+                <span className="text-base text-muted-foreground">({byTier.other.length})</span>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {byTier.other.map(renderCollegeCard)}
               </div>
             </div>
           )}

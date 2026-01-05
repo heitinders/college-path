@@ -35,6 +35,22 @@ describe("pages render", () => {
     jest.clearAllMocks();
     (global as any).fetch = jest.fn((input: RequestInfo) => {
       const url = typeof input === "string" ? input : input.url;
+      if (url.includes("/api/saved-colleges")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            data: [],
+          }),
+        });
+      }
+      if (url.includes("/api/colleges/by-ids")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            data: [],
+          }),
+        });
+      }
       if (url.includes("/api/colleges")) {
         return Promise.resolve({
           ok: true,

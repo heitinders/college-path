@@ -4,14 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { MatchRationalePanel } from "@/components/match-rationale-panel";
 import {
   mockMatchResults,
-  mockSavedColleges,
   mockRequirements,
   mockApplicationDeadlines,
 } from "@/lib/mock-data";
-import { MapPin, ExternalLink, Plus, Check, Calendar } from "lucide-react";
+import { MapPin, ExternalLink, Calendar } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { University } from "@/types";
+import { SaveCollegeButton } from "@/components/save-college-button";
+import prisma from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,63 @@ const toCampusSize = (size?: number): University["size"] | undefined => {
   if (size < 15000) return "medium";
   return "large";
 };
+
+const REGION_BY_STATE: Record<string, University["region"]> = {
+  AK: "West Coast",
+  AZ: "West Coast",
+  CA: "West Coast",
+  CO: "West Coast",
+  HI: "West Coast",
+  ID: "West Coast",
+  MT: "West Coast",
+  NV: "West Coast",
+  NM: "West Coast",
+  OR: "West Coast",
+  UT: "West Coast",
+  WA: "West Coast",
+  WY: "West Coast",
+  CT: "Northeast",
+  ME: "Northeast",
+  MA: "Northeast",
+  NH: "Northeast",
+  NJ: "Northeast",
+  NY: "Northeast",
+  PA: "Northeast",
+  RI: "Northeast",
+  VT: "Northeast",
+  IL: "Midwest",
+  IN: "Midwest",
+  IA: "Midwest",
+  KS: "Midwest",
+  MI: "Midwest",
+  MN: "Midwest",
+  MO: "Midwest",
+  ND: "Midwest",
+  NE: "Midwest",
+  OH: "Midwest",
+  SD: "Midwest",
+  WI: "Midwest",
+  AL: "South",
+  AR: "South",
+  DC: "South",
+  DE: "South",
+  FL: "South",
+  GA: "South",
+  KY: "South",
+  LA: "South",
+  MD: "South",
+  MS: "South",
+  NC: "South",
+  OK: "South",
+  SC: "South",
+  TN: "South",
+  TX: "South",
+  VA: "South",
+  WV: "South",
+};
+
+const toRegion = (state?: string): University["region"] | undefined =>
+  state ? REGION_BY_STATE[state] : undefined;
 
 const sanitizeUrl = (url?: string): string => {
   if (!url) return "";
@@ -90,6 +149,7 @@ export default async function SchoolDetailPage({ params }: { params: { id: strin
         type: toSchoolType(school["school.ownership"]),
         website: sanitizeUrl(school["school.school_url"]),
         size: toCampusSize(school["latest.student.size"]),
+        region: toRegion(school["school.state"]),
       };
       const admissionRate = school["latest.admissions.admission_rate.overall"];
       const satMidpoint = getSatMidpoint(school);
@@ -107,12 +167,48 @@ export default async function SchoolDetailPage({ params }: { params: { id: strin
   }
 
   const match = mockMatchResults[university.id];
-  const isSaved = mockSavedColleges.some(sc => sc.universityId === university.id);
   const requirements = mockRequirements[university.id];
   const deadlines = mockApplicationDeadlines[university.id] || [];
+  let isSaved = false;
+  let onboardingRequired = false;
+  const user = await getCurrentUser();
+  if (user) {
+    const student = await prisma.student.findUnique({
+      where: { userId: user.id },
+    });
+    if (student) {
+      const unitId = Number(university.id);
+      const saved = await prisma.savedCollege.findFirst({
+        where: {
+          studentId: student.id,
+          university: { unitId },
+        },
+      });
+      isSaved = Boolean(saved);
+    } else if (user.role === "STUDENT") {
+      onboardingRequired = true;
+    }
+  }
 
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
+      {onboardingRequired && (
+        <div className="rounded-2xl border bg-accent/10 border-accent/30 px-6 py-4 shadow-luxury-sm">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                Complete onboarding to save colleges
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Finish your student profile to add schools to your list.
+              </p>
+            </div>
+            <Button asChild size="sm">
+              <Link href="/onboarding">Go to Onboarding</Link>
+            </Button>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -136,19 +232,7 @@ export default async function SchoolDetailPage({ params }: { params: { id: strin
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button variant={isSaved ? "secondary" : "default"}>
-              {isSaved ? (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  Saved
-                </>
-              ) : (
-                <>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add to My List
-                </>
-              )}
-            </Button>
+            <SaveCollegeButton university={university} initialSaved={isSaved} />
             <Button variant="outline" asChild>
               <a href={university.website} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4 mr-2" />

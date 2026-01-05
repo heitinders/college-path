@@ -35,15 +35,35 @@ export default function OnboardingPage() {
     intendedMajor: '',
     budget: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const router = useRouter();
   const progress = (currentStep / STEPS.length) * 100;
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < STEPS.length) {
       setCurrentStep(currentStep + 1);
-    } else {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      const response = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.error || "Unable to complete onboarding.");
+      }
       router.push('/dashboard');
+    } catch (error) {
+      setSubmitError((error as Error).message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -310,7 +330,7 @@ export default function OnboardingPage() {
           </Button>
           <Button onClick={handleNext}>
             {currentStep === STEPS.length ? (
-              "Complete Setup"
+              isSubmitting ? "Completing..." : "Complete Setup"
             ) : (
               <>
                 Next
@@ -319,6 +339,9 @@ export default function OnboardingPage() {
             )}
           </Button>
         </div>
+        {submitError && (
+          <p className="text-sm text-destructive">{submitError}</p>
+        )}
       </div>
     </div>
   );
