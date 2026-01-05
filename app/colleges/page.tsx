@@ -65,18 +65,23 @@ export default function CollegesPage() {
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Explore Colleges</h1>
-        <p className="text-muted-foreground text-base md:text-lg">
-          Search and discover universities that match your profile
-        </p>
+      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Find your best-fit schools</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">
+            Explore Colleges
+          </h1>
+          <p className="text-muted-foreground text-base md:text-lg">
+            Search and discover universities that match your profile
+          </p>
+        </div>
       </div>
 
       {/* Search and Filters */}
-      <Card>
+      <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
         <CardContent className="pt-6 space-y-4">
           {/* Search Bar */}
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -89,7 +94,7 @@ export default function CollegesPage() {
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="gap-2"
+              className="w-full gap-2 sm:w-auto"
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filters
@@ -103,7 +108,8 @@ export default function CollegesPage() {
 
           {/* Filter Panel */}
           {showFilters && (
-            <div className="pt-4 border-t space-y-4">
+            <div className="pt-4 border-t">
+              <div className="space-y-4 rounded-xl bg-muted/40 p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">State</label>
@@ -169,6 +175,7 @@ export default function CollegesPage() {
                   </Button>
                 </div>
               )}
+              </div>
             </div>
           )}
         </CardContent>
@@ -176,9 +183,16 @@ export default function CollegesPage() {
 
       {/* Results */}
       <div>
-        <p className="text-sm text-muted-foreground mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <p className="text-sm text-muted-foreground">
           Showing {filteredUniversities.length} {filteredUniversities.length === 1 ? 'college' : 'colleges'}
-        </p>
+          </p>
+          {activeFilterCount > 0 && (
+            <span className="text-xs font-medium rounded-full bg-secondary text-secondary-foreground px-3 py-1">
+              {activeFilterCount} filter{activeFilterCount === 1 ? '' : 's'} applied
+            </span>
+          )}
+        </div>
 
         {filteredUniversities.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -196,7 +210,7 @@ export default function CollegesPage() {
             ))}
           </div>
         ) : (
-          <Card>
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
             <CardContent className="py-12 text-center">
               <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="font-semibold text-lg mb-2">No colleges found</h3>

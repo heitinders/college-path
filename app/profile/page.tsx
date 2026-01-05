@@ -34,15 +34,18 @@ export default function ProfilePage() {
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground text-base md:text-lg">
-          Manage your academic profile, test scores, and preferences
-        </p>
+      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Your academic snapshot</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">Profile</h1>
+          <p className="text-muted-foreground text-base md:text-lg">
+            Manage your academic profile, test scores, and preferences
+          </p>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="border-b">
+      <div className="rounded-2xl border bg-card/80 p-2 shadow-luxury-sm">
         <div className="flex gap-2 overflow-x-auto">
           {TABS.map((tab) => {
             const Icon = tab.icon;
@@ -51,10 +54,10 @@ export default function ProfilePage() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-3 border-b-2 font-medium text-sm transition-colors whitespace-nowrap",
+                  "flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium text-sm transition-all whitespace-nowrap",
                   activeTab === tab.id
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
+                    ? "bg-primary text-primary-foreground shadow-luxury-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 )}
               >
                 {Icon && <Icon className="h-4 w-4" />}
@@ -70,7 +73,7 @@ export default function ProfilePage() {
         {/* Academics Tab */}
         {activeTab === 'academics' && (
           <>
-            <Card>
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle>GPA & Class Rank</CardTitle>
               </CardHeader>
@@ -111,7 +114,7 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Courses</CardTitle>
@@ -126,7 +129,7 @@ export default function ProfilePage() {
                   {mockCourses.map((course) => (
                     <div
                       key={course.id}
-                      className="flex items-center justify-between p-3 rounded-lg border bg-card"
+                      className="flex items-center justify-between p-3 rounded-lg border border-border/60 bg-card/90 shadow-luxury-sm"
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -159,7 +162,7 @@ export default function ProfilePage() {
 
         {/* Testing Tab */}
         {activeTab === 'testing' && (
-          <Card>
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Test Scores</CardTitle>
@@ -174,7 +177,7 @@ export default function ProfilePage() {
                 {mockTestScores.map((score) => (
                   <div
                     key={score.id}
-                    className="p-4 rounded-lg border bg-card"
+                    className="p-4 rounded-lg border border-border/60 bg-card/90 shadow-luxury-sm"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -228,7 +231,7 @@ export default function ProfilePage() {
 
         {/* Activities Tab */}
         {activeTab === 'activities' && (
-          <Card>
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Extracurricular Activities</CardTitle>
@@ -243,7 +246,7 @@ export default function ProfilePage() {
                 {mockExtracurriculars.map((activity) => (
                   <div
                     key={activity.id}
-                    className="p-4 rounded-lg border bg-card"
+                    className="p-4 rounded-lg border border-border/60 bg-card/90 shadow-luxury-sm"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -279,7 +282,7 @@ export default function ProfilePage() {
 
         {/* Achievements Tab */}
         {activeTab === 'achievements' && (
-          <Card>
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Awards & Achievements</CardTitle>
@@ -294,7 +297,7 @@ export default function ProfilePage() {
                 {mockAchievements.map((achievement) => (
                   <div
                     key={achievement.id}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-card"
+                    className="flex items-center justify-between p-3 rounded-lg border border-border/60 bg-card/90 shadow-luxury-sm"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -326,7 +329,7 @@ export default function ProfilePage() {
 
         {/* Preferences Tab */}
         {activeTab === 'preferences' && (
-          <Card>
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
             <CardHeader>
               <CardTitle>College Preferences</CardTitle>
             </CardHeader>

@@ -14,16 +14,16 @@ export function RoadmapActionItem({ item, onToggle }: RoadmapActionItemProps) {
   const isInProgress = item.status === 'in_progress';
 
   const categoryColors = {
-    academics: 'bg-blue-100 text-blue-800',
-    testing: 'bg-purple-100 text-purple-800',
-    extracurriculars: 'bg-green-100 text-green-800',
-    summer: 'bg-orange-100 text-orange-800',
-    applications: 'bg-red-100 text-red-800',
+    academics: 'bg-sky-500/10 text-sky-700 dark:bg-sky-500/20 dark:text-sky-200',
+    testing: 'bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200',
+    extracurriculars: 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200',
+    summer: 'bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200',
+    applications: 'bg-rose-500/10 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200',
   };
 
   return (
     <div className={cn(
-      "flex items-start gap-3 p-4 rounded-lg border bg-card hover:shadow-sm transition-all",
+      "flex items-start gap-3 rounded-xl border border-border/60 bg-card/90 p-4 shadow-luxury-sm hover:shadow-luxury transition-all",
       isComplete && "bg-muted/50"
     )}>
       <Checkbox
@@ -48,7 +48,7 @@ export function RoadmapActionItem({ item, onToggle }: RoadmapActionItemProps) {
             </p>
           </div>
           {isInProgress && (
-            <span className="text-xs px-2 py-1 rounded-md bg-blue-100 text-blue-800 whitespace-nowrap">
+            <span className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary whitespace-nowrap">
               In Progress
             </span>
           )}

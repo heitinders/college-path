@@ -9,6 +9,7 @@ import { Select } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { capitalizeFirst } from "@/lib/utils";
 
 const STEPS = [
   { id: 1, title: "Basic Information", description: "Tell us about yourself" },
@@ -53,14 +54,25 @@ export default function OnboardingPage() {
   };
 
   const updateField = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const normalizedValue = (field === 'firstName' || field === 'lastName')
+      ? capitalizeFirst(value)
+      : value;
+    setFormData(prev => ({ ...prev, [field]: normalizedValue }));
   };
 
   return (
     <div className="container max-w-3xl px-4 md:px-6 py-8 md:py-12 lg:py-16">
       <div className="space-y-8">
+        <div className="rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 shadow-luxury">
+          <p className="text-sm font-medium text-primary">Let’s get you set up</p>
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gradient">Student Onboarding</h1>
+          <p className="text-muted-foreground text-base">
+            A few quick steps so we can personalize your college journey.
+          </p>
+        </div>
+
         {/* Progress Header */}
-        <div className="space-y-3">
+        <div className="space-y-3 rounded-2xl border bg-card/80 p-4 shadow-luxury-sm">
           <div className="flex items-center justify-between text-base text-muted-foreground">
             <span className="font-medium">Step {currentStep} of {STEPS.length}</span>
             <span>{Math.round(progress)}% complete</span>
@@ -69,7 +81,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Form Card */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury">
           <CardHeader>
             <CardTitle className="text-2xl md:text-3xl">{STEPS[currentStep - 1].title}</CardTitle>
             <CardDescription className="text-base">{STEPS[currentStep - 1].description}</CardDescription>
@@ -183,7 +195,7 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-muted p-4">
+                <div className="rounded-lg border border-border/60 bg-muted/50 p-4">
                   <p className="text-sm text-muted-foreground">
                     You'll be able to add your courses, class rank, and academic details in your profile later.
                   </p>
@@ -223,7 +235,7 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-muted p-4">
+                <div className="rounded-lg border border-border/60 bg-muted/50 p-4">
                   <p className="text-sm text-muted-foreground">
                     Haven't taken these tests yet? No problem! You can add scores later or mark them as planned in your profile.
                   </p>
@@ -234,7 +246,7 @@ export default function OnboardingPage() {
             {/* Step 4: Activities */}
             {currentStep === 4 && (
               <div className="space-y-4">
-                <div className="rounded-lg bg-muted p-4">
+                <div className="rounded-lg border border-border/60 bg-muted/50 p-4">
                   <p className="text-sm text-muted-foreground">
                     We'll help you build a comprehensive list of your extracurricular activities, leadership roles, and achievements in the next section.
                   </p>
@@ -276,8 +288,8 @@ export default function OnboardingPage() {
                   </Select>
                 </div>
 
-                <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
-                  <p className="text-sm text-blue-900">
+                <div className="rounded-lg bg-accent/10 border border-accent/30 p-4">
+                  <p className="text-sm text-foreground">
                     You can refine all of these preferences and add more details (location, school size, campus culture, etc.) in your profile settings.
                   </p>
                 </div>

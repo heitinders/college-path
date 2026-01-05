@@ -18,8 +18,9 @@ export function UniversityCard({
   onSave
 }: UniversityCardProps) {
   return (
-    <Card className="hover:shadow-luxury-lg hover:-translate-y-0.5 transition-all">
-      <CardContent>
+    <Card className="overflow-hidden border border-border/60 bg-card/90 shadow-luxury-sm hover:shadow-luxury-lg hover:-translate-y-0.5 transition-all">
+      <div className="h-1.5 w-full bg-gradient-to-r from-primary/60 via-accent/60 to-primary/40" />
+      <CardContent className="p-6">
         <div className="space-y-5">
           <div>
             <Link href={`/colleges/${university.id}`}>
@@ -50,7 +51,7 @@ export function UniversityCard({
             </div>
           )}
 
-          <div className="flex items-center gap-2.5 text-sm">
+          <div className="flex flex-wrap items-center gap-2.5 text-sm">
             <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-muted/40 text-foreground border border-border/40">
               {university.type === 'public' ? 'Public' : 'Private'}
             </span>
@@ -62,11 +63,11 @@ export function UniversityCard({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex gap-3">
+      <CardFooter className="flex flex-col gap-3 p-6 pt-0 sm:flex-row">
         <Button
           variant={isSaved ? "secondary" : "default"}
           onClick={onSave}
-          className="flex-1 gap-2"
+          className="w-full flex-1 gap-2"
         >
           {isSaved ? (
             <>
@@ -80,7 +81,7 @@ export function UniversityCard({
             </>
           )}
         </Button>
-        <Button variant="outline" asChild>
+        <Button variant="outline" asChild className="w-full sm:w-auto">
           <Link href={`/colleges/${university.id}`}>
             View Details
           </Link>

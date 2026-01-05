@@ -5,6 +5,7 @@ import { Navigation } from "./navigation"
 import { GraduationCap } from "lucide-react"
 import { useSession, signOut } from "next-auth/react"
 import { Button } from "./ui/button"
+import { capitalizeFirst } from "@/lib/utils"
 
 export function Header() {
   const { data: session, status } = useSession()
@@ -28,7 +29,9 @@ export function Header() {
           ) : session ? (
             <>
               <div className="text-sm">
-                <p className="font-semibold text-foreground">{session.user?.name || session.user?.email}</p>
+                <p className="font-semibold text-foreground">
+                  {capitalizeFirst(session.user?.name || session.user?.email || "")}
+                </p>
                 <p className="text-muted-foreground capitalize">{session.user?.role?.toLowerCase()}</p>
               </div>
               <Button

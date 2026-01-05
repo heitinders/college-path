@@ -13,7 +13,7 @@ export function ProfileCompletenessCard({
   missingFields = []
 }: ProfileCompletenessCardProps) {
   return (
-    <Card>
+    <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
       <CardHeader>
         <CardTitle>Profile Completeness</CardTitle>
       </CardHeader>

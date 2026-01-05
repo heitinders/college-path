@@ -57,11 +57,14 @@ export default function RoadmapPage() {
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Your Roadmap</h1>
-        <p className="text-muted-foreground text-base md:text-lg">
-          Grade-by-grade action plan for college preparation
-        </p>
+      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Plan your next steps</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">Your Roadmap</h1>
+          <p className="text-muted-foreground text-base md:text-lg">
+            Grade-by-grade action plan for college preparation
+          </p>
+        </div>
       </div>
 
       {/* Grade Selector */}
@@ -77,14 +80,14 @@ export default function RoadmapPage() {
               key={grade}
               onClick={() => setSelectedGrade(grade)}
               className={cn(
-                "flex-1 min-w-[120px] p-4 rounded-lg border-2 transition-all text-left",
+                "flex-1 min-w-[120px] rounded-xl border border-border/60 bg-card/80 p-4 text-left transition-all shadow-luxury-sm hover:shadow-luxury",
                 isActive
-                  ? "border-primary bg-primary/5 shadow-sm"
-                  : "border-transparent bg-card hover:border-border"
+                  ? "border-primary/40 bg-primary/10"
+                  : "hover:border-border"
               )}
             >
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold">Grade {grade}</span>
+                <span className="text-2xl font-semibold">Grade {grade}</span>
                 {isCurrent && (
                   <span className="text-xs px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
                     Current
@@ -108,7 +111,7 @@ export default function RoadmapPage() {
 
             return (
               <div key={categoryKey} className="space-y-4">
-                <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2.5">
+                <h2 className="text-2xl font-semibold tracking-tight flex items-center gap-2.5">
                   <span>{categoryIcons[categoryKey]}</span>
                   {categoryLabels[categoryKey] || categoryKey}
                 </h2>
@@ -126,7 +129,7 @@ export default function RoadmapPage() {
           })}
         </div>
       ) : (
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">
               No roadmap items for Grade {selectedGrade} yet
@@ -136,12 +139,12 @@ export default function RoadmapPage() {
       )}
 
       {/* Info Card */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-accent/10 border-accent/30">
         <CardContent className="pt-6">
-          <h3 className="font-semibold text-blue-900 mb-2">
+          <h3 className="font-semibold text-foreground mb-2">
             About Your Roadmap
           </h3>
-          <div className="space-y-2 text-sm text-blue-900">
+          <div className="space-y-2 text-sm text-foreground">
             <p>
               Your roadmap is personalized based on your grade level and college goals. Each action is designed to keep you on track for a successful college application.
             </p>

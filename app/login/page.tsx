@@ -41,7 +41,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/10 p-6">
       <div className="w-full max-w-lg">
         {/* Logo/Header */}
         <div className="text-center mb-10">
@@ -52,7 +52,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Card */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury">
           <CardHeader>
             <CardTitle>Welcome back</CardTitle>
           </CardHeader>

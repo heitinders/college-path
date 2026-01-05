@@ -16,7 +16,7 @@ import {
   mockMatchResults,
   mockDeadlines,
 } from "@/lib/mock-data";
-import { calculateProfileCompleteness } from "@/lib/utils";
+import { calculateProfileCompleteness, capitalizeFirst } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowRight, BookmarkCheck, Calendar, Map, TrendingUp } from "lucide-react";
 import { getCurrentUser } from "@/lib/session";
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   }
 
   // Extract first name from full name
-  const firstName = user.name?.split(' ')[0] || user.email?.split('@')[0] || 'there';
+  const firstName = capitalizeFirst(user.name?.split(' ')[0] || user.email?.split('@')[0] || 'there');
 
   const completeness = calculateProfileCompleteness({
     profile: mockProfile,
@@ -66,11 +66,16 @@ export default async function DashboardPage() {
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Welcome Header */}
-      <div className="space-y-1">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Welcome back, {firstName}!</h1>
-        <p className="text-muted-foreground text-base md:text-lg">
-          Class of {mockStudent.gradYear} • Grade {mockStudent.gradeLevel}
-        </p>
+      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Your college journey</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">
+            Welcome back, {firstName}!
+          </h1>
+          <p className="text-muted-foreground text-base md:text-lg">
+            Class of {mockStudent.gradYear} • Grade {mockStudent.gradeLevel}
+          </p>
+        </div>
       </div>
 
       {/* Main Grid */}
@@ -82,7 +87,7 @@ export default async function DashboardPage() {
         />
 
         {/* Saved Colleges Summary */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <BookmarkCheck className="h-5 w-5" />
@@ -131,7 +136,7 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Quick Actions */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardHeader>
             <CardTitle className="text-lg">Quick Actions</CardTitle>
           </CardHeader>
@@ -161,7 +166,7 @@ export default async function DashboardPage() {
       {/* Upcoming Deadlines */}
       <div className="space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Upcoming Deadlines</h2>
+          <h2 className="text-3xl font-semibold tracking-tight">Upcoming Deadlines</h2>
           <Button variant="ghost" asChild>
             <Link href="/deadlines">
               View all
@@ -186,7 +191,7 @@ export default async function DashboardPage() {
             })}
           </div>
         ) : (
-          <Card>
+          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
             <CardContent className="py-8 text-center text-muted-foreground">
               <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
               <p>No upcoming deadlines</p>
@@ -201,7 +206,7 @@ export default async function DashboardPage() {
       {/* Current Roadmap Tasks (Preview) */}
       <div className="space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Your Roadmap</h2>
+          <h2 className="text-3xl font-semibold tracking-tight">Your Roadmap</h2>
           <Button variant="ghost" asChild>
             <Link href="/roadmap">
               View full roadmap
@@ -210,7 +215,7 @@ export default async function DashboardPage() {
           </Button>
         </div>
 
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardContent className="pt-6">
             <div className="space-y-3">
               <div className="flex items-start gap-3">

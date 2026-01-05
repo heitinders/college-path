@@ -16,11 +16,15 @@ export function DeadlineCard({ deadline, universityName }: DeadlineCardProps) {
 
   return (
     <Card className={cn(
-      "hover:shadow-luxury-lg transition-all",
-      isUrgent && "border-primary/60",
+      "relative overflow-hidden border border-border/60 bg-card/90 shadow-luxury-sm hover:shadow-luxury-lg transition-all",
+      isUrgent && "ring-1 ring-primary/20",
       isPast && "opacity-60"
     )}>
-      <CardContent>
+      <div className={cn(
+        "h-1.5 w-full",
+        isUrgent ? "bg-primary/70" : "bg-primary/30"
+      )} />
+      <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-3 flex-1">
             <div>
@@ -50,7 +54,7 @@ export function DeadlineCard({ deadline, universityName }: DeadlineCardProps) {
               )}
             </div>
           </div>
-          <div className="px-3 py-1.5 rounded-lg text-xs font-medium bg-muted/40 text-foreground border border-border/40 capitalize shrink-0">
+          <div className="px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary/70 text-secondary-foreground border border-border/60 capitalize shrink-0">
             {deadline.type.replace('_', ' ')}
           </div>
         </div>

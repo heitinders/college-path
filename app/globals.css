@@ -1,91 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Warm Neutral Base - Swiss Luxury Spa Aesthetic */
-    --background: 35 20% 97%;        /* Warm cream white */
-    --foreground: 30 8% 20%;         /* Deep warm charcoal */
+    /* Academic Fresh palette */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
 
-    /* Cards - Slightly off-white with warmth */
-    --card: 35 18% 95%;
-    --card-foreground: 30 8% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    /* Popovers */
-    --popover: 35 18% 95%;
-    --popover-foreground: 30 8% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary - Subtle Bronze/Gold */
-    --primary: 35 35% 55%;           /* Refined bronze */
-    --primary-foreground: 35 20% 97%;
+    --primary: 213 78% 44%;
+    --primary-foreground: 210 40% 98%;
 
-    /* Secondary - Warm Beige */
-    --secondary: 35 15% 88%;
-    --secondary-foreground: 30 8% 30%;
+    --secondary: 43 92% 90%;
+    --secondary-foreground: 222 47% 11%;
 
-    /* Muted - Warm Gray */
-    --muted: 35 12% 92%;
-    --muted-foreground: 30 6% 50%;
+    --muted: 210 28% 94%;
+    --muted-foreground: 215 20% 45%;
 
-    /* Accent - Subtle Gold */
-    --accent: 40 45% 65%;
-    --accent-foreground: 30 8% 20%;
+    --accent: 42 90% 55%;
+    --accent-foreground: 222 47% 11%;
 
-    /* Destructive - Muted Terracotta */
-    --destructive: 10 50% 60%;
-    --destructive-foreground: 35 20% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Borders - Warm Taupe */
-    --border: 35 15% 85%;
-    --input: 35 15% 85%;
+    --border: 214 20% 88%;
+    --input: 214 20% 88%;
 
-    /* Ring - Bronze */
-    --ring: 35 35% 55%;
+    --ring: 213 78% 44%;
 
-    /* Tier Colors - Tonal Variations of Bronze */
-    --tier-reach: 35 25% 65%;       /* Lighter bronze */
-    --tier-target: 35 35% 55%;      /* Base bronze */
-    --tier-safety: 35 45% 45%;      /* Deeper bronze */
+    /* Tier Colors - Reach/Target/Safety */
+    --tier-reach: 150 45% 45%;
+    --tier-target: 213 78% 44%;
+    --tier-safety: 28 85% 55%;
 
-    /* Refined corner radius */
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Dark mode with warm undertones */
-    --background: 30 8% 12%;
-    --foreground: 35 20% 95%;
+    --background: 222 28% 10%;
+    --foreground: 210 40% 96%;
 
-    --card: 30 8% 16%;
-    --card-foreground: 35 20% 95%;
+    --card: 222 28% 13%;
+    --card-foreground: 210 40% 96%;
 
-    --popover: 30 8% 16%;
-    --popover-foreground: 35 20% 95%;
+    --popover: 222 28% 13%;
+    --popover-foreground: 210 40% 96%;
 
-    --primary: 35 40% 65%;
-    --primary-foreground: 30 8% 12%;
+    --primary: 213 85% 62%;
+    --primary-foreground: 222 28% 10%;
 
-    --secondary: 30 8% 20%;
-    --secondary-foreground: 35 20% 95%;
+    --secondary: 40 35% 18%;
+    --secondary-foreground: 210 40% 96%;
 
-    --muted: 30 8% 20%;
-    --muted-foreground: 35 10% 60%;
+    --muted: 223 18% 18%;
+    --muted-foreground: 215 15% 65%;
 
-    --accent: 40 45% 70%;
-    --accent-foreground: 30 8% 12%;
+    --accent: 42 90% 60%;
+    --accent-foreground: 222 28% 10%;
 
-    --destructive: 10 50% 65%;
-    --destructive-foreground: 35 20% 95%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 8% 24%;
-    --input: 30 8% 24%;
+    --border: 223 16% 22%;
+    --input: 223 16% 22%;
 
-    --ring: 35 40% 65%;
+    --ring: 213 85% 62%;
 
-    --tier-reach: 35 30% 70%;
-    --tier-target: 35 40% 65%;
-    --tier-safety: 35 50% 55%;
+    --tier-reach: 150 40% 55%;
+    --tier-target: 213 85% 62%;
+    --tier-safety: 28 75% 60%;
   }
 }
 
@@ -96,20 +87,30 @@
 
   body {
     @apply bg-background text-foreground;
-    /* Refined typography with optimal readability */
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    /* Academic-friendly typography */
+    font-family: 'Source Sans 3', ui-sans-serif, system-ui, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: 'kern' 1;
     text-rendering: optimizeLegibility;
     line-height: 1.7;
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, hsl(var(--accent) / 0.18), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, hsl(var(--primary) / 0.12), transparent 55%);
+    background-attachment: fixed;
   }
 
-  /* Typography refinements - Swiss luxury aesthetic */
+  .dark body {
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, hsl(var(--accent) / 0.08), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, hsl(var(--primary) / 0.08), transparent 55%);
+  }
+
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;  /* Semibold maximum, never bold */
-    letter-spacing: -0.02em;
-    line-height: 1.3;
+    font-family: 'Sora', ui-sans-serif, system-ui, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
   }
 
   p {
@@ -128,15 +129,15 @@
 }
 
 @layer utilities {
-  /* Glassmorphism with warm tones */
+  /* Glassmorphism with cool academic tones */
   .glass {
-    background: rgba(250, 248, 246, 0.72);
+    background: rgba(246, 249, 255, 0.72);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
 
   .glass-dark {
-    background: rgba(40, 36, 32, 0.72);
+    background: rgba(20, 27, 39, 0.72);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
@@ -148,7 +149,7 @@
 
   /* Warm gradient for accents */
   .text-gradient {
-    background: linear-gradient(135deg, hsl(35, 35%, 55%) 0%, hsl(40, 45%, 65%) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

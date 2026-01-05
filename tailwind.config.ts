@@ -59,14 +59,21 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "SF Pro Display",
+          "Source Sans 3",
+          "ui-sans-serif",
+          "system-ui",
           "Segoe UI",
-          "Roboto",
-          "Oxygen",
-          "Ubuntu",
-          "Cantarell",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
+        display: [
+          "Sora",
+          "ui-sans-serif",
+          "system-ui",
+          "Segoe UI",
+          "Helvetica Neue",
+          "Arial",
           "sans-serif",
         ],
       },
@@ -88,14 +95,14 @@ const config: Config = {
         "128": "32rem",
       },
       boxShadow: {
-        /* Premium luxury shadows - Extremely subtle */
-        "luxury-sm": "0 1px 2px 0 rgba(0, 0, 0, 0.02)",
-        "luxury": "0 2px 8px rgba(0, 0, 0, 0.04)",
-        "luxury-lg": "0 4px 16px rgba(0, 0, 0, 0.06)",
+        /* Academic crisp shadows */
+        "luxury-sm": "0 1px 2px rgba(15, 23, 42, 0.08)",
+        "luxury": "0 6px 16px rgba(15, 23, 42, 0.08)",
+        "luxury-lg": "0 12px 28px rgba(15, 23, 42, 0.12)",
         /* Legacy apple shadows for compatibility - mapped to luxury shadows */
-        "apple-sm": "0 1px 2px 0 rgba(0, 0, 0, 0.02)",
-        "apple": "0 2px 8px rgba(0, 0, 0, 0.04)",
-        "apple-lg": "0 4px 16px rgba(0, 0, 0, 0.06)",
+        "apple-sm": "0 1px 2px rgba(15, 23, 42, 0.08)",
+        "apple": "0 6px 16px rgba(15, 23, 42, 0.08)",
+        "apple-lg": "0 12px 28px rgba(15, 23, 42, 0.12)",
       },
       animation: {
         "fade-in": "fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)",

@@ -15,7 +15,7 @@ export function ChecklistItem({ item, onToggle }: ChecklistItemProps) {
 
   return (
     <div className={cn(
-      "flex items-start gap-3 p-3 rounded-lg border bg-card transition-colors",
+      "flex items-start gap-3 rounded-xl border border-border/60 bg-card/90 p-3 shadow-luxury-sm transition-colors",
       isComplete && "bg-muted/50"
     )}>
       <Checkbox
@@ -32,7 +32,7 @@ export function ChecklistItem({ item, onToggle }: ChecklistItemProps) {
             {item.title}
           </h4>
           {isInProgress && (
-            <span className="text-xs px-2 py-1 rounded-md bg-blue-100 text-blue-800 whitespace-nowrap">
+            <span className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary whitespace-nowrap">
               In Progress
             </span>
           )}

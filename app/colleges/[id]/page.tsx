@@ -30,15 +30,16 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Header */}
-      <div className="space-y-6">
+      <div className="rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-          <div className="flex-1">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{university.name}</h1>
-            <div className="flex items-center gap-2 mt-3 text-muted-foreground text-base md:text-lg">
+          <div className="flex-1 space-y-3">
+            <p className="text-sm font-medium text-primary">University profile</p>
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">{university.name}</h1>
+            <div className="flex items-center gap-2 text-muted-foreground text-base md:text-lg">
               <MapPin className="h-5 w-5" />
               <span>{university.city}, {university.state}</span>
             </div>
-            <div className="flex items-center gap-2 mt-3">
+            <div className="flex items-center gap-2">
               <Badge variant="secondary">
                 {university.type === 'public' ? 'Public' : 'Private'}
               </Badge>
@@ -80,7 +81,7 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
         <div className="lg:col-span-2 space-y-8">
           {/* Admissions Benchmarks */}
           {benchmarks && (
-            <Card>
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle>Admissions Profile</CardTitle>
               </CardHeader>
@@ -126,7 +127,7 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
 
           {/* Application Requirements */}
           {requirements && (
-            <Card>
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle>Application Requirements</CardTitle>
               </CardHeader>
@@ -171,7 +172,7 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
 
           {/* Application Deadlines */}
           {deadlines.length > 0 && (
-            <Card>
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
@@ -183,7 +184,7 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
                   {deadlines.map((deadline, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 rounded-lg bg-muted"
+                      className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/50 p-3"
                     >
                       <div>
                         <p className="font-semibold">{deadline.planType}</p>
@@ -215,7 +216,7 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
           {match ? (
             <MatchRationalePanel match={match} />
           ) : (
-            <Card>
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Match Analysis</CardTitle>
               </CardHeader>
@@ -231,12 +232,12 @@ export default function SchoolDetailPage({ params }: { params: { id: string } })
           )}
 
           {isSaved && (
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-accent/10 border-accent/30 shadow-luxury-sm">
               <CardHeader>
                 <CardTitle className="text-lg">Application Checklist</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-blue-900 mb-4">
+                <p className="text-sm text-foreground mb-4">
                   Track your application progress for this school
                 </p>
                 <Button variant="outline" className="w-full" asChild>

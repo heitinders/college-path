@@ -67,13 +67,14 @@ export default function ChecklistPage({ params }: { params: { id: string } }) {
           </Link>
         </Button>
 
-        <div className="space-y-1">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{university.name}</h1>
-          <p className="text-muted-foreground text-base md:text-lg">Application Checklist</p>
+        <div className="rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+          <p className="text-sm font-medium text-primary">Application checklist</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">{university.name}</h1>
+          <p className="text-muted-foreground text-base md:text-lg">Track every requirement in one place</p>
         </div>
 
         {/* Overall Progress */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardContent className="pt-6">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -103,8 +104,8 @@ export default function ChecklistPage({ params }: { params: { id: string } }) {
           const sectionTotal = sectionItems.length;
 
           return (
-            <Card key={sectionKey}>
-              <CardHeader>
+            <Card key={sectionKey} className="bg-card/90 border-border/70 shadow-luxury-sm">
+              <CardHeader className="p-6">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl">
                     {sectionLabels[sectionKey] || sectionKey}
@@ -114,7 +115,7 @@ export default function ChecklistPage({ params }: { params: { id: string } }) {
                   </span>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-2 p-6 pt-0">
                 {sectionItems.map(item => (
                   <ChecklistItem
                     key={item.id}
@@ -128,7 +129,7 @@ export default function ChecklistPage({ params }: { params: { id: string } }) {
         })}
 
         {/* Add Custom Item */}
-        <Card className="border-dashed">
+        <Card className="border-dashed bg-card/80">
           <CardContent className="pt-6">
             <Button variant="outline" className="w-full">
               <Plus className="h-4 w-4 mr-2" />
@@ -139,11 +140,11 @@ export default function ChecklistPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Quick Tips */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-accent/10 border-accent/30">
         <CardHeader>
           <CardTitle className="text-xl">Tips</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-base text-blue-900">
+        <CardContent className="space-y-2 text-base text-foreground">
           <p>• Start your essays early and have multiple people review them</p>
           <p>• Request recommendation letters at least 4 weeks before deadlines</p>
           <p>• Double-check all requirements on the official university website</p>

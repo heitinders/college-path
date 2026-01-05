@@ -61,20 +61,23 @@ export default function ParentDashboardPage() {
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Parent Dashboard</h1>
+      <div className="flex flex-col gap-4 rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Parent overview</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">Parent Dashboard</h1>
           <p className="text-muted-foreground text-base md:text-lg">
             Overview of {mockStudent.firstName}'s college journey
           </p>
         </div>
-        <Badge variant="outline" className="text-sm">
-          Read-Only View
-        </Badge>
+        <div>
+          <Badge variant="outline" className="text-sm">
+            Read-Only View
+          </Badge>
+        </div>
       </div>
 
       {/* Student Info Card */}
-      <Card>
+      <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -107,15 +110,15 @@ export default function ParentDashboardPage() {
       {(urgentDeadlines.length > 0 || completeness < 80) && (
         <div className="grid gap-4 md:grid-cols-2">
           {urgentDeadlines.length > 0 && (
-            <Card className="border-orange-200 bg-orange-50">
+            <Card className="border-accent/40 bg-accent/10 shadow-luxury-sm">
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2 text-orange-900">
+                <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                   <AlertCircle className="h-5 w-5" />
                   Upcoming Deadlines
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-orange-900 mb-3">
+                <p className="text-sm text-foreground mb-3">
                   {urgentDeadlines.length} {urgentDeadlines.length === 1 ? 'deadline' : 'deadlines'} in the next 7 days
                 </p>
                 <ul className="space-y-2">
@@ -125,11 +128,11 @@ export default function ParentDashboardPage() {
                       : undefined;
                     return (
                       <li key={deadline.id} className="flex items-start gap-2 text-sm">
-                        <Clock className="h-4 w-4 mt-0.5 text-orange-600 flex-shrink-0" />
+                        <Clock className="h-4 w-4 mt-0.5 text-accent flex-shrink-0" />
                         <div>
-                          <p className="font-medium text-orange-900">{deadline.title}</p>
+                          <p className="font-medium text-foreground">{deadline.title}</p>
                           {university && (
-                            <p className="text-orange-700">{university.name}</p>
+                            <p className="text-muted-foreground">{university.name}</p>
                           )}
                         </div>
                       </li>
@@ -141,18 +144,18 @@ export default function ParentDashboardPage() {
           )}
 
           {completeness < 80 && (
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-primary/30 bg-primary/10 shadow-luxury-sm">
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2 text-blue-900">
+                <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                   <AlertCircle className="h-5 w-5" />
                   Profile Incomplete
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-blue-900 mb-3">
+                <p className="text-sm text-foreground mb-3">
                   Profile is {completeness}% complete
                 </p>
-                <p className="text-sm text-blue-800">
+                <p className="text-sm text-muted-foreground">
                   Encourage {mockStudent.firstName} to complete their profile for more accurate college matches and recommendations.
                 </p>
               </CardContent>
@@ -164,7 +167,7 @@ export default function ParentDashboardPage() {
       {/* Progress Metrics */}
       <div className="grid gap-4 md:grid-cols-3">
         {/* Profile Completeness */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardHeader>
             <CardTitle className="text-lg">Profile Completeness</CardTitle>
           </CardHeader>
@@ -176,22 +179,22 @@ export default function ParentDashboardPage() {
             <div className="space-y-1 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">GPA</span>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Test Scores</span>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Activities</span>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Saved Colleges */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <GraduationCap className="h-5 w-5" />
@@ -241,7 +244,7 @@ export default function ParentDashboardPage() {
         </Card>
 
         {/* Roadmap Progress */}
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardHeader>
             <CardTitle className="text-lg">Grade {mockStudent.gradeLevel} Roadmap</CardTitle>
           </CardHeader>
@@ -265,7 +268,7 @@ export default function ParentDashboardPage() {
       </div>
 
       {/* Academic Summary */}
-      <Card>
+      <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
         <CardHeader>
           <CardTitle>Academic Summary</CardTitle>
         </CardHeader>

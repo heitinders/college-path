@@ -46,8 +46,9 @@ export default function MyCollegesPage() {
     const progressPercent = (college.checklistProgress.completed / college.checklistProgress.total) * 100;
 
     return (
-      <Card key={college.id} className="hover:shadow-md transition-shadow">
-        <CardHeader>
+      <Card key={college.id} className="overflow-hidden border border-border/60 bg-card/90 shadow-luxury-sm hover:shadow-luxury-lg transition-all">
+        <div className="h-1.5 w-full bg-gradient-to-r from-primary/50 via-accent/50 to-primary/40" />
+        <CardHeader className="p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <Link href={`/colleges/${college.universityId}`}>
@@ -63,7 +64,7 @@ export default function MyCollegesPage() {
             {college.match && <TierBadge tier={college.match.tier} />}
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-6 pt-0">
           {/* Checklist Progress */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
@@ -114,24 +115,27 @@ export default function MyCollegesPage() {
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">My Colleges</h1>
+      <div className="flex flex-col gap-4 rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-6 md:p-8 shadow-luxury">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Track your short list</p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gradient">My Colleges</h1>
           <p className="text-muted-foreground text-base md:text-lg">
             {savedWithDetails.length} {savedWithDetails.length === 1 ? 'school' : 'schools'} on your list
           </p>
         </div>
-        <Button asChild>
-          <Link href="/colleges">Explore More Colleges</Link>
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild>
+            <Link href="/colleges">Explore More Colleges</Link>
+          </Button>
+        </div>
       </div>
 
       {savedWithDetails.length === 0 ? (
-        <Card>
+        <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
           <CardContent className="py-12 text-center">
             <div className="max-w-md mx-auto space-y-4">
-              <div className="h-16 w-16 mx-auto rounded-full bg-muted flex items-center justify-center">
-                <ListChecks className="h-8 w-8 text-muted-foreground" />
+              <div className="h-16 w-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
+                <ListChecks className="h-8 w-8 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-2">No colleges saved yet</h3>
@@ -152,7 +156,7 @@ export default function MyCollegesPage() {
             <div className="space-y-5">
               <div className="flex items-center gap-2.5">
                 <TierBadge tier="reach" />
-                <h2 className="text-2xl font-bold tracking-tight">Reach Schools</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">Reach Schools</h2>
                 <span className="text-base text-muted-foreground">({byTier.reach.length})</span>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -166,7 +170,7 @@ export default function MyCollegesPage() {
             <div className="space-y-5">
               <div className="flex items-center gap-2.5">
                 <TierBadge tier="target" />
-                <h2 className="text-2xl font-bold tracking-tight">Target Schools</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">Target Schools</h2>
                 <span className="text-base text-muted-foreground">({byTier.target.length})</span>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -180,7 +184,7 @@ export default function MyCollegesPage() {
             <div className="space-y-5">
               <div className="flex items-center gap-2.5">
                 <TierBadge tier="safety" />
-                <h2 className="text-2xl font-bold tracking-tight">Safety Schools</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">Safety Schools</h2>
                 <span className="text-base text-muted-foreground">({byTier.safety.length})</span>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

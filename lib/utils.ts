@@ -17,6 +17,11 @@ export function getDaysUntil(date: string | Date): number {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
+export function capitalizeFirst(value: string): string {
+  if (!value) return value;
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 export function calculateProfileCompleteness(data: {
   profile?: any;
   courses?: any[];

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAuth } from "@/lib/session"
+import { capitalizeFirst } from "@/lib/utils"
 import prisma from "@/lib/prisma"
 
 // GET /api/profile - Get current user's profile
@@ -77,8 +78,8 @@ export async function PUT(request: NextRequest) {
       const student = await prisma.student.update({
         where: { userId: user.id },
         data: {
-          firstName: body.firstName,
-          lastName: body.lastName,
+          firstName: body.firstName ? capitalizeFirst(body.firstName) : body.firstName,
+          lastName: body.lastName ? capitalizeFirst(body.lastName) : body.lastName,
           gradeLevel: body.gradeLevel,
           gradYear: body.gradYear,
           highSchool: body.highSchool,

@@ -10,7 +10,7 @@ interface MatchRationalePanelProps {
 
 export function MatchRationalePanel({ match }: MatchRationalePanelProps) {
   return (
-    <Card>
+    <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Match Analysis</CardTitle>
@@ -27,7 +27,7 @@ export function MatchRationalePanel({ match }: MatchRationalePanelProps) {
             <ul className="space-y-1.5">
               {match.rationale.map((reason, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
                   <span>{reason}</span>
                 </li>
               ))}
@@ -43,7 +43,7 @@ export function MatchRationalePanel({ match }: MatchRationalePanelProps) {
                 .sort((a, b) => a.priority - b.priority)
                 .map((gap, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm">
-                    <AlertCircle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                    <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-medium">{gap.area}</p>
                       <p className="text-muted-foreground">{gap.suggestion}</p>
@@ -55,7 +55,7 @@ export function MatchRationalePanel({ match }: MatchRationalePanelProps) {
         )}
 
         {match.gaps.length === 0 && match.tier === 'safety' && (
-          <p className="text-sm text-green-600">
+          <p className="text-sm text-emerald-600">
             Your profile is strong for this institution. This is a good safety school option.
           </p>
         )}
