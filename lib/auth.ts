@@ -1,12 +1,12 @@
-import { NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import { authConfig } from "@/auth.config"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -20,29 +20,27 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
+          return null;
         }
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email
+            email: credentials.email as string
           }
         });
 
-        if (!user) {
-          throw new Error("User not found");
+        if (!user || !user.password) {
+          return null;
         }
 
-        // Note: In production, you'd store hashed passwords
-        // This is a simplified version for initial setup
-        // const isCorrectPassword = await bcrypt.compare(
-        //   credentials.password,
-        //   user.hashedPassword
-        // );
+        const isCorrectPassword = await bcrypt.compare(
+          credentials.password as string,
+          user.password
+        );
 
-        // if (!isCorrectPassword) {
-        //   throw new Error("Invalid password");
-        // }
+        if (!isCorrectPassword) {
+          return null;
+        }
 
         return {
           id: user.id,
@@ -55,9 +53,9 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (session?.user) {
-        session.user.id = token.sub || user?.id;
+        session.user.id = token.sub as string;
         session.user.role = token.role as string;
       }
       return session;
@@ -69,12 +67,8 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
   },
-  pages: {
-    signIn: '/login',
-    signUp: '/signup',
-  },
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
+})
