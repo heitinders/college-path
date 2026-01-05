@@ -13,7 +13,7 @@ import { notFound } from "next/navigation";
 export default function ChecklistPage({ params }: { params: { id: string } }) {
   // In a real app, we'd find the saved college by ID
   // For now, we'll use the first saved college (Boston University)
-  const university = mockUniversities.find(u => u.id === 'u2');
+  const university = mockUniversities[0];
 
   if (!university) {
     notFound();

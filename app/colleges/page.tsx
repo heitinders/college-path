@@ -77,7 +77,7 @@ export default function CollegesPage() {
   const [isSaving, setIsSaving] = useState<string | null>(null);
   const [onboardingRequired, setOnboardingRequired] = useState(false);
   const [filters, setFilters] = useState({
-    state: ALL_STATES.map(([abbr]) => abbr),
+    state: ALL_STATES.map(([abbr]) => abbr) as string[],
     type: '',
     size: '',
     region: '',

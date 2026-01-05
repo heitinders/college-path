@@ -92,8 +92,10 @@ export default function MyCollegesPage() {
     other: savedWithDetails.filter(s => !s.match?.tier),
   };
 
-  const renderCollegeCard = (college: typeof savedWithDetails[0]) => {
-    const progressPercent = (college.checklistProgress.completed / college.checklistProgress.total) * 100;
+  const renderCollegeCard = (college: SavedCollegeWithDetails) => {
+    const completed = college.checklistProgress?.completed ?? 0;
+    const total = college.checklistProgress?.total ?? 0;
+    const progressPercent = total > 0 ? (completed / total) * 100 : 0;
 
     return (
       <Card key={college.id} className="overflow-hidden border border-border/60 bg-card/90 shadow-luxury-sm hover:shadow-luxury-lg transition-all">
@@ -120,7 +122,7 @@ export default function MyCollegesPage() {
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Application Progress</span>
               <span className="font-medium">
-                {college.checklistProgress.completed} / {college.checklistProgress.total}
+                {completed} / {total}
               </span>
             </div>
             <Progress value={progressPercent} className="h-2" />

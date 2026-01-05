@@ -26,6 +26,18 @@ jest.mock("@/lib/session", () => ({
   getCurrentUser: jest.fn(),
 }));
 
+jest.mock("@/lib/prisma", () => ({
+  __esModule: true,
+  default: {
+    student: {
+      findUnique: jest.fn().mockResolvedValue(null),
+    },
+    savedCollege: {
+      findFirst: jest.fn().mockResolvedValue(null),
+    },
+  },
+}));
+
 const mockedGetCurrentUser = getCurrentUser as jest.Mock;
 const mockedRedirect = redirect as jest.Mock;
 const mockedNotFound = notFound as jest.Mock;
@@ -102,7 +114,7 @@ describe("pages render", () => {
   it("renders explore colleges page", async () => {
     const CollegesPage = (await import("@/app/colleges/page")).default;
     render(<CollegesPage />);
-    expect(screen.getByText("Explore Colleges")).toBeInTheDocument();
+    expect(await screen.findByText("Explore Colleges")).toBeInTheDocument();
   });
 
   it("renders college detail page", async () => {
@@ -120,8 +132,8 @@ describe("pages render", () => {
 
   it("renders my colleges page", async () => {
     const MyCollegesPage = (await import("@/app/my-colleges/page")).default;
-    render(MyCollegesPage() as ReactElement);
-    expect(screen.getByText("My Colleges")).toBeInTheDocument();
+    render(<MyCollegesPage />);
+    expect(await screen.findByText("My Colleges")).toBeInTheDocument();
   });
 
   it("renders college checklist page", async () => {
