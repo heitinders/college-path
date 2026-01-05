@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DeadlineCard } from "@/components/deadline-card";
 import { mockDeadlines, mockUniversities } from "@/lib/mock-data";
-import { Calendar, List } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ViewMode = 'timeline' | 'calendar';
@@ -14,6 +14,8 @@ type FilterType = 'all' | 'application' | 'testing' | 'school_specific' | 'miles
 export default function DeadlinesPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const [filter, setFilter] = useState<FilterType>('all');
+  const [calendarDate, setCalendarDate] = useState(() => new Date());
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
 
   const filteredDeadlines = mockDeadlines
     .filter(d => filter === 'all' || d.type === filter)
@@ -39,6 +41,46 @@ export default function DeadlinesPage() {
     { value: 'school_specific', label: 'School-Specific' },
     { value: 'milestone', label: 'Milestones' },
   ];
+
+  const deadlinesByDay = useMemo(() => {
+    const map = new Map<string, typeof mockDeadlines>();
+    filteredDeadlines.forEach((deadline) => {
+      const date = new Date(deadline.date);
+      const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+      const existing = map.get(key) || [];
+      existing.push(deadline);
+      map.set(key, existing);
+    });
+    return map;
+  }, [filteredDeadlines]);
+
+  const monthLabel = calendarDate.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+  });
+  const monthStart = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+  const startDayIndex = monthStart.getDay();
+  const totalCells = 42;
+  const calendarCells = Array.from({ length: totalCells }, (_, index) => {
+    const cellDate = new Date(
+      calendarDate.getFullYear(),
+      calendarDate.getMonth(),
+      index - startDayIndex + 1
+    );
+    return {
+      date: cellDate,
+      inMonth: cellDate.getMonth() === calendarDate.getMonth(),
+      isToday: cellDate.toDateString() === new Date().toDateString(),
+    };
+  });
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const selectedKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+  const selectedDeadlines = deadlinesByDay.get(selectedKey) || [];
+  const selectedLabel = selectedDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
 
   return (
     <div className="container px-4 md:px-6 lg:px-8 py-8 md:py-10 lg:py-12 space-y-8 md:space-y-10 max-w-7xl">
@@ -126,22 +168,147 @@ export default function DeadlinesPage() {
             ))}
           </div>
         ) : (
-          <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
-            <CardContent className="py-12 text-center">
-              <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="font-semibold text-lg mb-2">Calendar View</h3>
-              <p className="text-muted-foreground">
-                Full calendar view coming soon. Use timeline view for now.
-              </p>
-              <Button
-                variant="outline"
-                onClick={() => setViewMode('timeline')}
-                className="mt-4"
-              >
-                Switch to Timeline
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
+              <CardContent className="space-y-6 p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCalendarDate(
+                          new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1)
+                        )
+                      }
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <div>
+                      <h3 className="text-lg font-semibold">{monthLabel}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {filteredDeadlines.length} total deadline{filteredDeadlines.length === 1 ? '' : 's'}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCalendarDate(
+                          new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1)
+                        )
+                      }
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const today = new Date();
+                      setCalendarDate(today);
+                      setSelectedDate(today);
+                    }}
+                  >
+                    Today
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-7 gap-2 text-xs text-muted-foreground">
+                  {weekDays.map((day) => (
+                    <div key={day} className="px-2 py-1 text-center font-medium">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-7 gap-2">
+                  {calendarCells.map(({ date, inMonth, isToday }) => {
+                    const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+                    const dayDeadlines = deadlinesByDay.get(key) || [];
+                    const visibleDeadlines = dayDeadlines.slice(0, 2);
+                    const remainingCount = dayDeadlines.length - visibleDeadlines.length;
+                    const isSelected = key === selectedKey;
+                    return (
+                      <button
+                        type="button"
+                        key={key}
+                        onClick={() => setSelectedDate(date)}
+                        className={cn(
+                          "min-h-[110px] rounded-xl border border-border/60 bg-card/80 p-2 text-left shadow-luxury-sm transition-colors hover:bg-muted/40",
+                          !inMonth && "bg-muted/30 text-muted-foreground",
+                          isToday && "ring-1 ring-primary/40",
+                          isSelected && "border-primary/40 bg-primary/10"
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className={cn("text-sm font-semibold", !inMonth && "text-muted-foreground")}>
+                            {date.getDate()}
+                          </span>
+                          {dayDeadlines.length > 0 && (
+                            <span className="text-xs rounded-full bg-primary/10 px-2 py-0.5 text-primary">
+                              {dayDeadlines.length}
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-2 space-y-1 text-xs">
+                          {visibleDeadlines.map((deadline) => (
+                            <div key={deadline.id} className="flex items-start gap-1">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent" />
+                              <span className="text-foreground leading-snug">{deadline.title}</span>
+                            </div>
+                          ))}
+                          {remainingCount > 0 && (
+                            <span className="text-xs text-muted-foreground">
+                              +{remainingCount} more
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
+              <CardContent className="space-y-4 p-6">
+                <div>
+                  <p className="text-sm font-medium text-primary">Selected Day</p>
+                  <h4 className="text-lg font-semibold">{selectedLabel}</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedDeadlines.length} deadline{selectedDeadlines.length === 1 ? '' : 's'}
+                  </p>
+                </div>
+
+                {selectedDeadlines.length > 0 ? (
+                  <div className="space-y-3">
+                    {selectedDeadlines.map((deadline) => {
+                      const university = deadline.universityId
+                        ? mockUniversities.find(u => u.id === deadline.universityId)
+                        : undefined;
+                      return (
+                        <div key={deadline.id} className="rounded-lg border border-border/60 bg-muted/40 p-3">
+                          <p className="text-sm font-semibold text-foreground">{deadline.title}</p>
+                          {university && (
+                            <p className="text-xs text-muted-foreground">{university.name}</p>
+                          )}
+                          <p className="text-xs text-muted-foreground capitalize mt-1">
+                            {deadline.type.replace('_', ' ')}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    No deadlines on this day. Pick another date to explore.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         )
       ) : (
         <Card className="bg-card/90 border-border/70 shadow-luxury-sm">
